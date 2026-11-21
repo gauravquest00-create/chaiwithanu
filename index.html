@@ -1,0 +1,3399 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="entry">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+  />
+  <title>Chai With Anu ☕✨ — 3D Invite</title>
+
+  <!-- Google Fonts: Playfair Display (Italic Display for Anu) + Plus Jakarta Sans (Crisp UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Three.js r128 UMD (Sandbox-Safe, No ES Modules or Importmaps) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    /* =========================================================================
+       1. DESIGN TOKENS & DYNAMIC STEP THEMES (Blush -> Peach -> Lavender -> Gold)
+       ========================================================================= */
+    :root {
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+      /* iPhone 17 Dynamic Island & Home Indicator Safe Areas */
+      --sat: env(safe-area-inset-top, 0px);
+      --sab: env(safe-area-inset-bottom, 0px);
+      --sal: env(safe-area-inset-left, 0px);
+      --sar: env(safe-area-inset-right, 0px);
+
+      /* Theme 1 (Entry): Blush-Champagne & Rose-Gold */
+      --bg-1: #fff6f4;
+      --bg-2: #ffe8ee;
+      --bg-3: #fde3d8;
+      --bg-4: #fdf1e6;
+
+      --aurora-1: rgba(244, 152, 176, 0.42);
+      --aurora-2: rgba(246, 198, 154, 0.42);
+      --aurora-3: rgba(255, 224, 232, 0.55);
+
+      --glass-bg: rgba(255, 252, 251, 0.74);
+      --glass-bg-strong: rgba(255, 253, 252, 0.93);
+      --glass-border: rgba(216, 92, 121, 0.24);
+      --glass-border-strong: rgba(216, 92, 121, 0.44);
+
+      --text-primary: #351b23;
+      --text-secondary: #6e4853;
+      --text-muted: #9c7581;
+
+      --accent-1: #d85c79;
+      --accent-2: #e59876;
+      --accent-soft: rgba(216, 92, 121, 0.12);
+      --accent-glow: rgba(216, 92, 121, 0.34);
+
+      --tile-bg: rgba(255, 255, 255, 0.86);
+      --shadow-card: 0 24px 60px rgba(173, 86, 106, 0.15), 0 4px 16px rgba(229, 152, 118, 0.1);
+
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Theme 2 (Step 2 - "Chale?"): Golden Peach-Blossom & Sunset Coral-Rose */
+    [data-theme="chale"] {
+      --bg-1: #fff5ee;
+      --bg-2: #ffe3d3;
+      --bg-3: #ffd6cc;
+      --bg-4: #fff0dc;
+
+      --aurora-1: rgba(251, 146, 120, 0.44);
+      --aurora-2: rgba(253, 186, 116, 0.46);
+      --aurora-3: rgba(244, 114, 142, 0.34);
+
+      --glass-border: rgba(232, 104, 96, 0.28);
+      --glass-border-strong: rgba(232, 104, 96, 0.48);
+
+      --text-primary: #3b1c17;
+      --text-secondary: #75463e;
+      --text-muted: #a27268;
+
+      --accent-1: #e45d63;
+      --accent-2: #f49b57;
+      --accent-soft: rgba(228, 93, 99, 0.13);
+      --accent-glow: rgba(244, 155, 87, 0.38);
+      --shadow-card: 0 24px 60px rgba(214, 98, 78, 0.16), 0 4px 16px rgba(244, 155, 87, 0.12);
+    }
+
+    /* Theme 3 (Step 3 - 3D Date Picker): Soft Lavender-Rose Bloom */
+    [data-theme="date"] {
+      --bg-1: #faf4ff;
+      --bg-2: #f4e3fa;
+      --bg-3: #fce2ec;
+      --bg-4: #f3e8ff;
+
+      --aurora-1: rgba(192, 132, 252, 0.36);
+      --aurora-2: rgba(244, 114, 182, 0.38);
+      --aurora-3: rgba(251, 207, 232, 0.5);
+
+      --glass-border: rgba(168, 85, 180, 0.25);
+      --glass-border-strong: rgba(168, 85, 180, 0.46);
+
+      --text-primary: #2f193b;
+      --text-secondary: #644573;
+      --text-muted: #90709f;
+
+      --accent-1: #b54ea8;
+      --accent-2: #ec6d96;
+      --accent-soft: rgba(181, 78, 168, 0.12);
+      --accent-glow: rgba(181, 78, 168, 0.34);
+      --shadow-card: 0 24px 60px rgba(147, 74, 158, 0.16), 0 4px 16px rgba(236, 109, 150, 0.12);
+    }
+
+    /* Theme 4 & 5 (Evening & VIP Pass Finale): Champagne Golden-Hour Glow */
+    [data-theme="evening"] {
+      --bg-1: #fff9ec;
+      --bg-2: #ffebd0;
+      --bg-3: #ffdcc6;
+      --bg-4: #fff4df;
+
+      --aurora-1: rgba(251, 191, 36, 0.35);
+      --aurora-2: rgba(249, 115, 115, 0.35);
+      --aurora-3: rgba(253, 214, 148, 0.5);
+
+      --glass-border: rgba(217, 119, 6, 0.26);
+      --glass-border-strong: rgba(217, 119, 6, 0.48);
+
+      --text-primary: #3a2112;
+      --text-secondary: #754c33;
+      --text-muted: #a1775c;
+
+      --accent-1: #d96b38;
+      --accent-2: #eab308;
+      --accent-soft: rgba(217, 107, 56, 0.13);
+      --accent-glow: rgba(234, 179, 8, 0.38);
+      --shadow-card: 0 24px 60px rgba(196, 112, 34, 0.17), 0 4px 18px rgba(234, 179, 8, 0.14);
+    }
+
+    /* =========================================================================
+       2. RESET, ANTI-WHITE-FLASH BASE & HIDDEN SCROLLBARS
+       ========================================================================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      width: 100%;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      /* Instant warm gradient on frame 1 so white flash is impossible */
+      background: linear-gradient(145deg, #fff6f4 0%, #ffe8ee 40%, #fde3d8 75%, #fdf1e6 100%);
+    }
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar,
+    *::-webkit-scrollbar {
+      display: none;
+    }
+
+    body {
+      width: 100%;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      font-family: var(--font-sans);
+      color: var(--text-primary);
+      background: linear-gradient(145deg, var(--bg-1) 0%, var(--bg-2) 38%, var(--bg-3) 72%, var(--bg-4) 100%);
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+      position: relative;
+      touch-action: manipulation;
+      transition: background 0.85s ease, color 0.6s ease;
+    }
+
+    button {
+      font-family: inherit;
+      color: inherit;
+      border: none;
+      background: none;
+      cursor: pointer;
+      outline: none;
+      touch-action: manipulation;
+    }
+
+    #safe-area-probe {
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    /* =========================================================================
+       3. MULTI-LAYERED ANIMATED AURORA MESH + FLOATING BOKEH ORBS + 3D CANVAS
+       ========================================================================= */
+    .aurora-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+      background: linear-gradient(145deg, var(--bg-1) 0%, var(--bg-2) 38%, var(--bg-3) 72%, var(--bg-4) 100%);
+      transition: background 0.85s ease;
+    }
+
+    .aurora-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(72px);
+      opacity: 0.85;
+      will-change: transform;
+      transition: background 0.9s ease;
+    }
+
+    .aurora-blob-1 {
+      width: 58vmax;
+      height: 58vmax;
+      top: -18vmax;
+      left: -14vmax;
+      background: radial-gradient(circle, var(--aurora-1) 0%, transparent 70%);
+      animation: auroraDrift1 16s ease-in-out infinite alternate;
+    }
+
+    .aurora-blob-2 {
+      width: 54vmax;
+      height: 54vmax;
+      bottom: -18vmax;
+      right: -12vmax;
+      background: radial-gradient(circle, var(--aurora-2) 0%, transparent 70%);
+      animation: auroraDrift2 19s ease-in-out infinite alternate;
+    }
+
+    .aurora-blob-3 {
+      width: 44vmax;
+      height: 44vmax;
+      top: 32%;
+      left: 42%;
+      background: radial-gradient(circle, var(--aurora-3) 0%, transparent 70%);
+      animation: auroraDrift3 14s ease-in-out infinite alternate;
+    }
+
+    @keyframes auroraDrift1 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(8vw, 6vh) scale(1.12); }
+    }
+
+    @keyframes auroraDrift2 {
+      0% { transform: translate(0, 0) scale(1.05); }
+      100% { transform: translate(-8vw, -7vh) scale(0.95); }
+    }
+
+    @keyframes auroraDrift3 {
+      0% { transform: translate(-20%, -10%) scale(0.94); }
+      100% { transform: translate(12%, 14%) scale(1.12); }
+    }
+
+    .bokeh-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .bokeh-orb {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.14) 55%, transparent 72%);
+      animation: bokehFloat var(--bdur, 12s) ease-in-out infinite alternate;
+      opacity: var(--bop, 0.45);
+    }
+
+    @keyframes bokehFloat {
+      0% { transform: translate(0, 0) scale(0.92); }
+      100% { transform: translate(var(--bx, 24px), var(--by, -34px)) scale(1.1); }
+    }
+
+    #webgl-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100dvh;
+      z-index: 2;
+      display: block;
+      pointer-events: none;
+    }
+
+    .bloom-flash {
+      position: fixed;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      opacity: 0;
+      background: radial-gradient(circle at 50% 48%, rgba(255, 232, 214, 0.65), transparent 68%);
+      transition: opacity 0.65s ease;
+    }
+
+    .bloom-flash.is-blooming {
+      opacity: 1;
+    }
+
+    #emoji-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 6;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .floating-emoji {
+      position: absolute;
+      bottom: -64px;
+      font-size: 1.7rem;
+      will-change: transform, opacity;
+      filter: drop-shadow(0 6px 12px rgba(196, 86, 114, 0.16));
+      animation: floatUpEmoji var(--dur, 4.8s) linear forwards;
+    }
+
+    @keyframes floatUpEmoji {
+      0% {
+        transform: translateY(0) translateX(0) rotate(0deg) scale(0.55);
+        opacity: 0;
+      }
+      14% { opacity: 1; }
+      84% { opacity: 0.94; }
+      100% {
+        transform: translateY(-115dvh) translateX(var(--drift, 40px)) rotate(var(--rot, 24deg)) scale(1.16);
+        opacity: 0;
+      }
+    }
+
+    /* =========================================================================
+       4. BLUSH-PEARL SPLIT-CURTAIN PRELOADER (Independent of Three.js + Failsafe)
+       ========================================================================= */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: all;
+    }
+
+    #preloader.is-done {
+      pointer-events: none;
+      display: none !important;
+    }
+
+    .curtain {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 50.6%;
+      background: linear-gradient(135deg, #fff5f3 0%, #ffe6eb 55%, #fce5d6 100%);
+      transition: transform 0.85s var(--ease-out-expo);
+      will-change: transform;
+    }
+
+    .curtain-top {
+      top: 0;
+      border-bottom: 1px solid rgba(216, 92, 121, 0.22);
+      box-shadow: 0 12px 40px rgba(216, 92, 121, 0.1);
+    }
+
+    .curtain-bottom {
+      bottom: 0;
+      border-top: 1px solid rgba(216, 92, 121, 0.22);
+      box-shadow: 0 -12px 40px rgba(216, 92, 121, 0.1);
+    }
+
+    #preloader.is-opening .curtain-top {
+      transform: translateY(-103%);
+    }
+
+    #preloader.is-opening .curtain-bottom {
+      transform: translateY(103%);
+    }
+
+    .preloader-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      padding: 24px;
+      text-align: center;
+      transition: opacity 0.35s ease, transform 0.45s var(--ease-out-expo);
+    }
+
+    #preloader.is-opening .preloader-content {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+
+    .loader-emblem-wrap {
+      position: relative;
+      width: 102px;
+      height: 102px;
+      display: grid;
+      place-items: center;
+    }
+
+    .loader-ring-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .loader-ring-track {
+      fill: none;
+      stroke: rgba(216, 92, 121, 0.16);
+      stroke-width: 3.5;
+    }
+
+    .loader-ring-progress {
+      fill: none;
+      stroke: url(#roseGoldGrad);
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-dasharray: 289;
+      stroke-dashoffset: 289;
+      transition: stroke-dashoffset 0.08s linear;
+    }
+
+    .loader-cup-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: cupGentleFloat 2.1s ease-in-out infinite;
+    }
+
+    @keyframes cupGentleFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .loader-title {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: clamp(1.16rem, 4.4vw, 1.46rem);
+      font-weight: 600;
+      color: #351b23;
+    }
+
+    .loader-percent {
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #d85c79;
+    }
+
+    .loader-bar-track {
+      width: 192px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(216, 92, 121, 0.16);
+      overflow: hidden;
+    }
+
+    .loader-bar-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #d85c79, #e59876);
+      transition: width 0.08s linear;
+    }
+
+    /* =========================================================================
+       5. GLOBAL CLICK / TAP RIPPLE & SPARKLE BURST
+       ========================================================================= */
+    .click-ripple-ring {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9500;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2.2px solid var(--accent-1);
+      box-shadow: 0 0 16px var(--accent-glow);
+      transform: translate(-50%, -50%) scale(0.35);
+      animation: clickRippleExpand 0.72s var(--ease-out-expo) forwards;
+    }
+
+    @keyframes clickRippleExpand {
+      0% {
+        transform: translate(-50%, -50%) scale(0.35);
+        opacity: 0.95;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(6.4);
+        opacity: 0;
+      }
+    }
+
+    .click-sparkle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9501;
+      font-size: 0.9rem;
+      transform: translate(-50%, -50%);
+      animation: clickSparkleFly 0.78s var(--ease-out-expo) forwards;
+    }
+
+    @keyframes clickSparkleFly {
+      0% {
+        transform: translate(-50%, -50%) scale(0.4) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1.16) rotate(var(--tr));
+        opacity: 0;
+      }
+    }
+
+    /* =========================================================================
+       6. MINIMAL TOP HUD PILL (Safe Below iPhone 17 Dynamic Island)
+       ========================================================================= */
+    .top-hud {
+      position: fixed;
+      top: calc(12px + var(--sat));
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 28px);
+      max-width: 900px;
+      z-index: 1200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 26px rgba(173, 86, 106, 0.08);
+      transition: border-color 0.5s ease;
+    }
+
+    .hud-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    .hud-brand em {
+      color: var(--accent-1);
+      font-style: italic;
+      transition: color 0.5s ease;
+    }
+
+    .hud-escape-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      border: 1px solid var(--glass-border);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--accent-1);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 64%;
+      transition: color 0.5s ease, background-color 0.5s ease, border-color 0.5s ease;
+    }
+
+    .hud-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-1);
+      flex-shrink: 0;
+      animation: pulseDot 1.8s infinite;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.65); opacity: 0.35; }
+    }
+
+    /* =========================================================================
+       7. PLAYFUL TOAST BANNER
+       ========================================================================= */
+    #tease-toast {
+      position: fixed;
+      top: calc(68px + var(--sat));
+      left: 50%;
+      transform: translateX(-50%) translateY(-14px) scale(0.92);
+      z-index: 6500;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: var(--glass-bg-strong);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1.5px solid var(--accent-1);
+      box-shadow: 0 12px 30px var(--accent-glow);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      opacity: 0;
+      pointer-events: none;
+      text-align: center;
+      max-width: calc(100vw - 28px);
+      transition: opacity 0.24s ease, transform 0.34s var(--ease-spring);
+    }
+
+    #tease-toast.is-visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+
+    /* =========================================================================
+       8. STAGE VIEWPORT, FROSTED GLASS CARDS & ENTRY ANIMATION
+       ========================================================================= */
+    .stage-viewport {
+      position: relative;
+      z-index: 20;
+      min-height: 100dvh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: calc(78px + var(--sat)) 16px calc(28px + var(--sab));
+      perspective: 1400px;
+    }
+
+    .stage-screen {
+      position: absolute;
+      width: 100%;
+      max-width: 540px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(30px) scale(0.94) rotateX(6deg);
+      transition: opacity 0.6s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
+      will-change: transform, opacity;
+    }
+
+    .stage-screen.is-active {
+      position: relative;
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0) scale(1) rotateX(0deg);
+    }
+
+    .stage-screen.is-leaving {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-28px) scale(0.94) rotateX(-6deg);
+    }
+
+    .glass-card {
+      width: 100%;
+      padding: 36px 30px;
+      border-radius: 30px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-card);
+      text-align: center;
+      position: relative;
+      transition: border-color 0.6s ease, box-shadow 0.6s ease;
+    }
+
+    .entry-stagger {
+      opacity: 0;
+      transform: translateY(22px) scale(0.96);
+      transition: opacity 0.7s var(--ease-out-expo), transform 0.78s var(--ease-out-expo);
+    }
+
+    body.entry-revealed .entry-stagger {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    body.entry-revealed .entry-stagger-1 { transition-delay: 0.06s; }
+    body.entry-revealed .entry-stagger-2 { transition-delay: 0.16s; }
+    body.entry-revealed .entry-stagger-3 { transition-delay: 0.28s; }
+    body.entry-revealed .entry-stagger-4 { transition-delay: 0.4s; }
+
+    .eyebrow-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      border: 1px solid var(--glass-border);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-1);
+      margin-bottom: 16px;
+      transition: color 0.5s ease, background-color 0.5s ease, border-color 0.5s ease;
+    }
+
+    .stage-heading {
+      font-family: var(--font-display);
+      font-size: clamp(1.65rem, 5.6vw, 2.42rem);
+      font-weight: 700;
+      line-height: 1.18;
+      letter-spacing: -0.01em;
+      margin-bottom: 14px;
+      color: var(--text-primary);
+    }
+
+    .anu-accent {
+      font-family: var(--font-display);
+      font-style: italic;
+      background: linear-gradient(125deg, var(--accent-1) 0%, var(--accent-2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stage-copy {
+      font-size: clamp(0.94rem, 3.6vw, 1.04rem);
+      line-height: 1.65;
+      color: var(--text-secondary);
+      max-width: 430px;
+      margin: 0 auto 24px;
+      font-weight: 500;
+    }
+
+    /* Inline status line for Nahiii 1st & 2nd click */
+    .entry-status-note {
+      min-height: 24px;
+      margin-top: 14px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--accent-1);
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.25s ease, transform 0.3s var(--ease-spring);
+    }
+
+    .entry-status-note.is-shown {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* =========================================================================
+       9. BUTTONS, GLITCH SHAKE & 6 RANDOMIZED POSITION-RELEASE MODES
+       ========================================================================= */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 13px 28px;
+      border-radius: 999px;
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: #ffffff;
+      background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%);
+      box-shadow: 0 12px 28px var(--accent-glow);
+      transition: transform 0.3s var(--ease-spring), box-shadow 0.3s ease, opacity 0.25s ease, background 0.5s ease;
+    }
+
+    .btn-primary:hover:not(.is-locked) {
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 16px 34px var(--accent-glow);
+    }
+
+    .btn-primary:active:not(.is-locked) {
+      transform: scale(0.96);
+    }
+
+    .btn-primary.is-locked {
+      opacity: 0.56;
+      box-shadow: none;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 12px 24px;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--accent-1);
+      background: var(--glass-bg-strong);
+      border: 1.5px solid var(--glass-border-strong);
+      box-shadow: 0 8px 20px rgba(173, 86, 106, 0.08);
+      transition: transform 0.3s var(--ease-spring), border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px) scale(1.03);
+      border-color: var(--accent-1);
+      box-shadow: 0 12px 26px var(--accent-glow);
+    }
+
+    .btn-escape {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 48px;
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: var(--glass-bg-strong);
+      border: 1.5px solid var(--glass-border);
+      box-shadow: 0 8px 20px rgba(173, 86, 106, 0.09);
+      white-space: nowrap;
+      will-change: left, top, transform, opacity;
+    }
+
+    /* Morphed button state when Modal Nahiii hits 5 chases */
+    .btn-escape.is-morphed-primary {
+      color: #ffffff !important;
+      background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%) !important;
+      border-color: transparent !important;
+      box-shadow: 0 14px 32px var(--accent-glow) !important;
+      font-weight: 700 !important;
+      transform: scale(1.08) !important;
+      transition: all 0.45s var(--ease-spring) !important;
+    }
+
+    #runaway-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 5600;
+      pointer-events: none;
+    }
+
+    #runaway-layer .btn-escape {
+      position: fixed;
+      pointer-events: auto;
+      z-index: 5601;
+    }
+
+    /* 6 Escape Mode Classes */
+    .escape-spring-glide {
+      transition: left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  top 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .escape-spin-zip {
+      transition: left 0.44s cubic-bezier(0.16, 1, 0.3, 1),
+                  top 0.44s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.44s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .escape-bouncy-hop {
+      transition: left 0.42s cubic-bezier(0.22, 1.4, 0.36, 1),
+                  top 0.42s cubic-bezier(0.22, 1.4, 0.36, 1);
+    }
+
+    @keyframes bouncyHopArc {
+      0% { transform: scale(1) translateY(0); }
+      40% { transform: scale(1.16, 0.88) translateY(-30px); }
+      75% { transform: scale(0.94, 1.08) translateY(5px); }
+      100% { transform: scale(1) translateY(0); }
+    }
+
+    .anim-bouncy-hop {
+      animation: bouncyHopArc 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .escape-flip-dodge {
+      transition: left 0.44s cubic-bezier(0.16, 1, 0.3, 1),
+                  top 0.44s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.46s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-style: preserve-3d;
+    }
+
+    .escape-blink-teleport {
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .escape-wiggle-dart {
+      transition: left 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                  top 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes cheekyWiggle {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(-13deg) scale(1.07); }
+      55% { transform: rotate(13deg) scale(1.07); }
+      80% { transform: rotate(-7deg) scale(1.03); }
+    }
+
+    .anim-wiggle {
+      animation: cheekyWiggle 0.2s ease;
+    }
+
+    .shake-nudge {
+      animation: gentleShake 0.4s ease;
+    }
+
+    @keyframes gentleShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px) rotate(-2deg); }
+      45% { transform: translateX(8px) rotate(2deg); }
+      70% { transform: translateX(-5px) rotate(-1deg); }
+    }
+
+    /* Card Glitch-Shake on 2nd Nahiii Click */
+    .card-glitch-shake {
+      animation: cardGlitch 0.55s ease;
+    }
+
+    @keyframes cardGlitch {
+      0%, 100% { transform: translate(0, 0) skewX(0deg); filter: none; }
+      18% { transform: translate(-7px, 2px) skewX(-3deg); filter: hue-rotate(15deg); }
+      38% { transform: translate(7px, -2px) skewX(3deg); filter: hue-rotate(-15deg); }
+      58% { transform: translate(-5px, 1px) skewX(-2deg); }
+      78% { transform: translate(5px, -1px) skewX(2deg); }
+    }
+
+    /* =========================================================================
+       10. FULL-SCREEN "NAHIII" SPAM STORM OVERLAY & FINAL MODAL
+       ========================================================================= */
+    #nahiii-spam-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 4800;
+      pointer-events: none;
+      overflow: hidden;
+      display: none;
+      background: rgba(255, 240, 244, 0.32);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    #nahiii-spam-layer.is-active {
+      display: block;
+      pointer-events: all;
+    }
+
+    .spam-bubble {
+      position: absolute;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1.5px solid var(--accent-1);
+      color: var(--accent-1);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-style: italic;
+      box-shadow: 0 10px 26px var(--accent-glow);
+      white-space: nowrap;
+      transform: translate(-50%, -50%) scale(0.2);
+      animation: spamPopIn 0.45s var(--ease-spring) forwards;
+    }
+
+    @keyframes spamPopIn {
+      0% { transform: translate(-50%, -50%) scale(0.2) rotate(var(--srot, 0deg)); opacity: 0; }
+      100% { transform: translate(-50%, -50%) scale(1) rotate(var(--srot, 0deg)); opacity: 1; }
+    }
+
+    #nahiii-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 5200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(53, 27, 35, 0.32);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+
+    #nahiii-modal.is-open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .nahiii-modal-card {
+      width: 100%;
+      max-width: 460px;
+      padding: 32px 26px;
+      border-radius: 28px;
+      background: var(--glass-bg-strong);
+      border: 1.5px solid var(--glass-border-strong);
+      box-shadow: var(--shadow-card);
+      text-align: center;
+      transform: scale(0.86) translateY(20px);
+      transition: transform 0.48s var(--ease-spring);
+    }
+
+    #nahiii-modal.is-open .nahiii-modal-card {
+      transform: scale(1) translateY(0);
+    }
+
+    .chase-counter-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 13px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-1);
+      font-size: 0.76rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    /* =========================================================================
+       11. STEP 3: CUSTOM 3D ANIMATED CALENDAR DATE PICKER
+       ========================================================================= */
+    .calendar-3d-wrap {
+      perspective: 1100px;
+      margin: 0 auto 14px;
+      max-width: 392px;
+    }
+
+    .calendar-3d-card {
+      background: var(--glass-bg-strong);
+      border: 1px solid var(--glass-border);
+      border-radius: 22px;
+      padding: 16px;
+      box-shadow: 0 16px 38px rgba(147, 74, 158, 0.12);
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: transform 0.16s ease-out;
+    }
+
+    .cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      transform: translateZ(14px);
+    }
+
+    .cal-month-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .cal-nav-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--accent-soft);
+      color: var(--accent-1);
+      display: grid;
+      place-items: center;
+      font-size: 1.05rem;
+      font-weight: 700;
+      transition: transform 0.28s var(--ease-spring), background-color 0.22s ease, color 0.22s ease;
+    }
+
+    .cal-nav-btn:hover {
+      background: var(--accent-1);
+      color: #ffffff;
+      transform: scale(1.08);
+    }
+
+    .cal-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      margin-bottom: 6px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .cal-days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      transform-style: preserve-3d;
+      transition: transform 0.34s var(--ease-out-expo), opacity 0.24s ease;
+    }
+
+    .cal-days-grid.is-flipping-next {
+      transform: rotateY(-28deg) translateX(-14px);
+      opacity: 0;
+    }
+
+    .cal-days-grid.is-flipping-prev {
+      transform: rotateY(28deg) translateX(14px);
+      opacity: 0;
+    }
+
+    .cal-day-tile {
+      min-height: 38px;
+      aspect-ratio: 1 / 1;
+      border-radius: 11px;
+      background: var(--tile-bg);
+      border: 1px solid var(--glass-border);
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: grid;
+      place-items: center;
+      transition: transform 0.26s var(--ease-spring), background-color 0.22s ease,
+                  box-shadow 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+    }
+
+    .cal-day-tile:not(.is-disabled):not(.is-empty):hover {
+      transform: translateZ(16px) translateY(-2px) scale(1.1);
+      border-color: var(--accent-1);
+      box-shadow: 0 8px 16px var(--accent-glow);
+      z-index: 2;
+    }
+
+    .cal-day-tile.is-today {
+      border-color: var(--accent-1);
+      box-shadow: inset 0 0 0 1.5px var(--accent-1);
+    }
+
+    .cal-day-tile.is-selected {
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      color: #ffffff;
+      border-color: transparent;
+      transform: translateZ(22px) scale(1.12);
+      box-shadow: 0 10px 22px var(--accent-glow);
+      z-index: 3;
+    }
+
+    .cal-day-tile.is-disabled {
+      opacity: 0.28;
+      cursor: not-allowed;
+      background: transparent;
+    }
+
+    .cal-day-tile.is-empty {
+      background: transparent;
+      border-color: transparent;
+      cursor: default;
+    }
+
+    .selected-date-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 7px 15px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      border: 1px solid var(--glass-border);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      min-height: 34px;
+    }
+
+    /* =========================================================================
+       12. STEP 4: TIME SELECTION CARDS
+       ========================================================================= */
+    .time-options-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .time-card-btn {
+      min-height: 112px;
+      padding: 16px 12px;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    .time-card-emoji {
+      font-size: 1.75rem;
+    }
+
+    .time-card-sub {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      opacity: 0.85;
+    }
+
+    .time-card-evening {
+      color: #ffffff;
+      background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+      box-shadow: 0 14px 30px var(--accent-glow);
+      border: 1.5px solid rgba(255, 255, 255, 0.55);
+      transition: transform 0.32s var(--ease-spring), box-shadow 0.32s ease;
+    }
+
+    .time-card-evening:hover {
+      transform: translateY(-4px) scale(1.04);
+      box-shadow: 0 18px 38px var(--accent-glow);
+    }
+
+    /* =========================================================================
+       13. STEP 5: FINALE — SHIMMERING 3D EVENING CHAI PASS + REPLAY
+       ========================================================================= */
+    .ticket-3d-wrap {
+      perspective: 1200px;
+      margin: 0 auto 20px;
+    }
+
+    .chai-ticket {
+      padding: 24px 22px;
+      border-radius: 24px;
+      background: var(--glass-bg-strong);
+      border: 1.5px solid var(--glass-border-strong);
+      box-shadow: var(--shadow-card);
+      transform-style: preserve-3d;
+      will-change: transform;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.16s ease-out;
+    }
+
+    .chai-ticket::after {
+      content: '';
+      position: absolute;
+      top: -60%;
+      left: -60%;
+      width: 45%;
+      height: 220%;
+      background: linear-gradient(
+        105deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.68) 50%,
+        transparent 100%
+      );
+      transform: rotate(24deg);
+      animation: ticketShimmer 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes ticketShimmer {
+      0% { left: -65%; }
+      45%, 100% { left: 135%; }
+    }
+
+    .ticket-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      margin-bottom: 15px;
+      border-bottom: 1.5px dashed var(--glass-border-strong);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent-1);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .sheet-sync-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 14px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.34);
+      color: #0f766e;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      opacity: 0;
+      transform: translateY(6px) scale(0.95);
+      transition: opacity 0.4s ease, transform 0.45s var(--ease-spring);
+    }
+
+    .sheet-sync-pill.is-synced {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .ticket-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      text-align: left;
+    }
+
+    .ticket-cell {
+      padding: 12px 14px;
+      border-radius: 15px;
+      background: var(--tile-bg);
+      border: 1px solid var(--glass-border);
+    }
+
+    .ticket-cell-full {
+      grid-column: span 2;
+    }
+
+    .ticket-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+
+    .ticket-value {
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .ticket-value.is-name {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--accent-1);
+    }
+
+    .closing-message-box {
+      padding: 16px 18px;
+      border-radius: 20px;
+      background: var(--accent-soft);
+      border: 1px solid var(--glass-border);
+      margin-bottom: 18px;
+    }
+
+    .closing-title {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: clamp(1.32rem, 4.6vw, 1.66rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .closing-sub {
+      font-size: clamp(0.86rem, 3.3vw, 0.94rem);
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* =========================================================================
+       14. CELEBRATION INTERSTITIAL OVERLAY
+       ========================================================================= */
+    #celebration-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 4400;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(255, 245, 244, 0.42);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.32s ease;
+    }
+
+    #celebration-overlay.is-visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .celebration-card {
+      padding: 28px 26px;
+      border-radius: 28px;
+      background: var(--glass-bg-strong);
+      border: 1.5px solid var(--glass-border-strong);
+      box-shadow: var(--shadow-card);
+      text-align: center;
+      max-width: 390px;
+      width: 100%;
+      transform: scale(0.78) translateY(18px);
+      transition: transform 0.48s var(--ease-spring);
+    }
+
+    #celebration-overlay.is-visible .celebration-card {
+      transform: scale(1) translateY(0);
+    }
+
+    .celebration-emoji {
+      font-size: 2.8rem;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+
+    .celebration-title {
+      font-family: var(--font-display);
+      font-size: 1.58rem;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .celebration-sub {
+      font-size: 0.93rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* =========================================================================
+       15. MOBILE & iPHONE 17 RESPONSIVENESS (393px - 480px)
+       ========================================================================= */
+    @media (max-width: 480px) {
+      .top-hud {
+        width: calc(100% - 20px);
+        padding: 8px 13px;
+      }
+
+      .hud-brand {
+        font-size: 0.92rem;
+      }
+
+      .hud-escape-pill {
+        font-size: 0.66rem;
+        padding: 4px 10px;
+      }
+
+      .stage-viewport {
+        padding: calc(70px + var(--sat)) 14px calc(24px + var(--sab));
+      }
+
+      .glass-card,
+      .nahiii-modal-card {
+        padding: 24px 18px;
+        border-radius: 24px;
+      }
+
+      .calendar-3d-card {
+        padding: 13px;
+        border-radius: 18px;
+      }
+
+      .cal-days-grid {
+        gap: 4px;
+      }
+
+      .cal-day-tile {
+        min-height: 36px;
+        font-size: 0.8rem;
+        border-radius: 9px;
+      }
+
+      .time-options-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .time-card-btn {
+        min-height: 60px;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 12px 18px;
+        border-radius: 16px;
+      }
+
+      .time-card-emoji {
+        font-size: 1.45rem;
+      }
+
+      .chai-ticket {
+        padding: 18px 16px;
+        border-radius: 20px;
+      }
+
+      .ticket-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .ticket-cell-full {
+        grid-column: span 1;
+      }
+
+      .ticket-cell {
+        padding: 10px 12px;
+      }
+
+      .btn-primary,
+      .btn-escape,
+      .btn-secondary {
+        min-height: 46px;
+        padding: 12px 20px;
+        font-size: 0.92rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- iPhone 17 Safe-Area Measurement Probe -->
+  <div id="safe-area-probe" aria-hidden="true"></div>
+
+  <!-- =========================================================================
+       MULTI-LAYERED AURORA MESH & FLOATING BOKEH ORBS (Always Visible Fallback)
+       ========================================================================= -->
+  <div class="aurora-backdrop" aria-hidden="true">
+    <div class="aurora-blob aurora-blob-1"></div>
+    <div class="aurora-blob aurora-blob-2"></div>
+    <div class="aurora-blob aurora-blob-3"></div>
+  </div>
+  <div class="bokeh-layer" id="bokeh-layer" aria-hidden="true"></div>
+
+  <!-- Transparent Three.js WebGL Canvas, Milestone Bloom & Floating Emoji Layer -->
+  <canvas id="webgl-canvas" aria-hidden="true"></canvas>
+  <div class="bloom-flash" id="bloom-flash" aria-hidden="true"></div>
+  <div id="emoji-layer" aria-hidden="true"></div>
+
+  <!-- =========================================================================
+       BLUSH-PEARL SPLIT-CURTAIN PRELOADER (Independent of Three.js + 2.2s Failsafe)
+       ========================================================================= -->
+  <div id="preloader" role="status" aria-live="polite">
+    <div class="curtain curtain-top"></div>
+    <div class="curtain curtain-bottom"></div>
+    <div class="preloader-content">
+      <div class="loader-emblem-wrap">
+        <svg class="loader-ring-svg" viewBox="0 0 100 100">
+          <defs>
+            <linearGradient id="roseGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#d85c79" />
+              <stop offset="100%" stop-color="#e59876" />
+            </linearGradient>
+          </defs>
+          <circle class="loader-ring-track" cx="50" cy="50" r="46"></circle>
+          <circle class="loader-ring-progress" id="loader-ring-progress" cx="50" cy="50" r="46"></circle>
+        </svg>
+        <div class="loader-cup-icon">
+          <span style="font-size: 1rem; margin-bottom: -4px;">✨</span>
+          <svg width="40" height="40" viewBox="0 0 48 48" fill="none">
+            <path d="M10 17H32V27C32 33.0751 27.0751 38 21 38C14.9249 38 10 33.0751 10 27V17Z" fill="url(#roseGoldGrad)" />
+            <path d="M32 20H35.5C38.5376 20 41 22.4624 41 25.5C41 28.5376 38.5376 31 35.5 31H32" stroke="#d85c79" stroke-width="3" stroke-linecap="round" />
+            <path d="M7 41H36" stroke="#e59876" stroke-width="3" stroke-linecap="round" />
+          </svg>
+        </div>
+      </div>
+      <div class="loader-title">Brewing something special for Anu...</div>
+      <div class="loader-percent" id="loader-percent">0%</div>
+      <div class="loader-bar-track">
+        <div class="loader-bar-fill" id="loader-bar-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full-Screen "Nahiii" Spam Storm Layer -->
+  <div id="nahiii-spam-layer" aria-hidden="true"></div>
+
+  <!-- Glassmorphic Final Modal After 3rd "Nahiii" Click -->
+  <div id="nahiii-modal" role="dialog" aria-modal="true" aria-labelledby="nahiii-modal-title">
+    <div class="nahiii-modal-card">
+      <span class="eyebrow-badge">⚠️ System Override</span>
+      <h3 class="stage-heading" id="nahiii-modal-title" style="font-size: clamp(1.45rem, 5vw, 1.95rem);">
+        System ne <span class="anu-accent">Nahiii</span> reject kar diya, Anu! 😅
+      </h3>
+      <p class="stage-copy" id="nahiii-modal-sub" style="margin-bottom: 14px;">
+        Ek last chance — invite open karo ya phir Nahiii ko pakad ke dikhao 😉
+      </p>
+      <div class="chase-counter-pill" id="chase-counter-pill">
+        <span>Chase Attempts: 0 / 5</span>
+      </div>
+      <div class="btn-row" id="nahiii-modal-actions">
+        <button type="button" class="btn-primary" id="btn-modal-open">
+          <span>Open Invite ✨</span>
+        </button>
+        <button
+          type="button"
+          class="btn-escape js-runaway"
+          id="btn-modal-nahiii"
+          data-home="nahiii-modal-actions"
+          data-max-chases="5"
+          data-phrases='["Pakad ke dikhao, Anu! 😉","Oops, phir nikal gaya! ✨","System bol raha hai Open Invite dabao ☕","Itni koshish? Bas 1 step aur bacha hai 🙈","You hit all attempts! Ab toh we’re going forward 😉✨"]'
+        >
+          <span>Nahiii 🙈</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full-Viewport Layer for Escaping Runaway Buttons -->
+  <div id="runaway-layer"></div>
+
+  <!-- Playful Toast -->
+  <div id="tease-toast" role="status" aria-live="polite"></div>
+
+  <!-- Minimal Top HUD Pill -->
+  <header class="top-hud">
+    <div class="hud-brand">For <em>Anu</em> ☕✨</div>
+    <div class="hud-escape-pill">
+      <span class="hud-dot"></span>
+      <span id="escape-mode-label">Escape: Spring Glide</span>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       5-STEP INTERACTIVE CHAI INVITATION FOR ANU
+       ========================================================================= -->
+  <main class="stage-viewport">
+    <!-- STEP 1: ENTRY CARD ("Open Invite ✨" + 3-Click Comedy "Nahiii") -->
+    <section class="stage-screen is-active" id="stage-0" aria-label="Welcome Anu">
+      <div class="glass-card" id="entry-glass-card">
+        <span class="eyebrow-badge entry-stagger entry-stagger-1">✨ A Little Evening Note</span>
+        <h1 class="stage-heading entry-stagger entry-stagger-2">
+          Hey <span class="anu-accent">Anu</span>…
+        </h1>
+        <p class="stage-copy entry-stagger entry-stagger-3">
+          Office ke baad ka best part? Tumhare saath ek garam chai aur thodi si baatein. Ek chhota sa invite hai — dekho gi?
+        </p>
+        <div class="btn-row entry-stagger entry-stagger-4">
+          <button type="button" class="btn-primary" id="btn-open-invite">
+            <span>Open Invite ✨</span>
+          </button>
+          <button type="button" class="btn-secondary" id="btn-entry-nahiii">
+            <span>Nahiii</span>
+          </button>
+        </div>
+        <div class="entry-status-note" id="entry-status-note" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- STEP 2: "CHALE?" QUESTION + GOLDEN PEACH-BLOSSOM THEME SHIFT -->
+    <section class="stage-screen" id="stage-1" aria-label="Chai Question">
+      <div class="glass-card">
+        <span class="eyebrow-badge">☕ Step 01 / Evening Plan</span>
+        <h2 class="stage-heading">
+          Evening chai pe chalein, <span class="anu-accent">Anu</span>?
+        </h2>
+        <p class="stage-copy">
+          Zero office talk, garam chai, aur acchi vibes — deal done samjhein?
+        </p>
+        <div class="btn-row" id="stage-1-actions">
+          <button type="button" class="btn-primary" id="btn-yes-chai">
+            <span>Yes, chalte hain ☕✨</span>
+          </button>
+          <button
+            type="button"
+            class="btn-escape js-runaway"
+            id="btn-no-chai"
+            data-home="stage-1-actions"
+            data-phrases='["Nice try Anu, we both know evening chai is a Yes 😉","Oops, No button thoda shy hai — Yes try karo ✨","Office stress zero, chai 100% — click Yes, Anu! ☕","Chai ko mana karna allowed nahi hai aaj 🙈✨"]'
+          >
+            <span>No 🙈</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3: CUSTOM 3D ANIMATED DATE PICKER + LAVENDER-ROSE THEME SHIFT -->
+    <section class="stage-screen" id="stage-2" aria-label="3D Date Picker">
+      <div class="glass-card">
+        <span class="eyebrow-badge">📅 Step 02 / Pick A Day</span>
+        <h2 class="stage-heading">
+          Awesome, <span class="anu-accent">Anu</span>! Pick our day ✨
+        </h2>
+        <p class="stage-copy" style="margin-bottom: 16px;">
+          Choose any upcoming date so I have something great to look forward to after work.
+        </p>
+
+        <div class="calendar-3d-wrap">
+          <div class="calendar-3d-card" id="calendar-3d-card">
+            <div class="cal-header">
+              <button type="button" class="cal-nav-btn" id="cal-prev-btn" aria-label="Previous Month">&#8592;</button>
+              <div class="cal-month-title" id="cal-month-title">November 2026</div>
+              <button type="button" class="cal-nav-btn" id="cal-next-btn" aria-label="Next Month">&#8594;</button>
+            </div>
+            <div class="cal-weekdays">
+              <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+            </div>
+            <div class="cal-days-grid" id="cal-days-grid"></div>
+          </div>
+        </div>
+
+        <div class="selected-date-pill" id="selected-date-pill">
+          <span>✨ Tap any upcoming date above</span>
+        </div>
+
+        <div class="btn-row" id="stage-2-actions">
+          <button type="button" class="btn-primary is-locked" id="btn-confirm-date">
+            <span>Confirm Date ✨</span>
+          </button>
+          <button
+            type="button"
+            class="btn-escape js-runaway"
+            id="btn-maybe-later"
+            data-home="stage-2-actions"
+            data-phrases='["Ignore? No chance, pick a date Anu 😉","Oops, ye button bhaag gaya — calendar try karo ✨","Evening chai wait nahi kar sakti 🙈☕"]'
+          >
+            <span>Ignore / Maybe Later 🙈</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 4: TIME SELECTION + CHAMPAGNE GOLDEN-HOUR THEME SHIFT -->
+    <section class="stage-screen" id="stage-3" aria-label="Time Selection">
+      <div class="glass-card">
+        <span class="eyebrow-badge">🌇 Step 03 / Best Vibe</span>
+        <h2 class="stage-heading">
+          When should we go for chai, <span class="anu-accent">Anu</span>?
+        </h2>
+        <p class="stage-copy">
+          Pick the time slot that feels just right.
+        </p>
+
+        <div class="time-options-grid" id="stage-3-actions">
+          <button
+            type="button"
+            class="btn-escape time-card-btn js-runaway"
+            id="btn-time-morning"
+            data-home="stage-3-actions"
+            data-phrases='["Morning mein toh office rush hota hai — Evening best hai ✨","Too early Anu, Evening chai ka maza alag hai 😉","Nice try! Evening wins every time 🌇"]'
+          >
+            <span class="time-card-emoji">☀️</span>
+            <span>Morning ☀️</span>
+            <span class="time-card-sub">Office Rush</span>
+          </button>
+
+          <button
+            type="button"
+            class="btn-escape time-card-btn js-runaway"
+            id="btn-time-afternoon"
+            data-home="stage-3-actions"
+            data-phrases='["Afternoon mein meetings aur dhoop — Evening is way better 😉","Skip afternoon rush, Evening chai select karo ✨","Sunset + chai > Afternoon heat, right Anu? 🌇"]'
+          >
+            <span class="time-card-emoji">🌤️</span>
+            <span>Afternoon 🌤️</span>
+            <span class="time-card-sub">Meeting Hours</span>
+          </button>
+
+          <button type="button" class="time-card-btn time-card-evening" id="btn-time-evening">
+            <span class="time-card-emoji">🌆</span>
+            <span>Evening 🌆✨</span>
+            <span class="time-card-sub">Best Vibe</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 5: FINALE — SHIMMERING 3D EVENING CHAI PASS + REPLAY -->
+    <section class="stage-screen" id="stage-4" aria-label="Evening Chai Pass">
+      <div class="glass-card">
+        <span class="eyebrow-badge">✨ Officially Locked In</span>
+        <h2 class="stage-heading">EVENING CHAI PASS ✨</h2>
+
+        <div class="ticket-3d-wrap">
+          <div class="chai-ticket" id="chai-ticket-3d">
+            <div class="ticket-top-bar">
+              <span>EVENING CHAI PASS ✨</span>
+              <span>CONFIRMED ✓</span>
+            </div>
+            <div class="ticket-grid">
+              <div class="ticket-cell">
+                <div class="ticket-label">Guest</div>
+                <div class="ticket-value is-name">Anu</div>
+              </div>
+              <div class="ticket-cell">
+                <div class="ticket-label">Status</div>
+                <div class="ticket-value">Confirmed ✓</div>
+              </div>
+              <div class="ticket-cell ticket-cell-full">
+                <div class="ticket-label">Selected Date</div>
+                <div class="ticket-value" id="ticket-date-value">Tue, 24 Nov 2026</div>
+              </div>
+              <div class="ticket-cell ticket-cell-full">
+                <div class="ticket-label">Time</div>
+                <div class="ticket-value">Evening (Post-Work Chai) 🌆</div>
+              </div>
+            </div>
+            <div class="sheet-sync-pill" id="sheet-sync-pill" aria-live="polite">
+              <span>☁️ Synced to Sheet ✓</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="closing-message-box">
+          <div class="closing-title">See you soon, Anu! ☕✨</div>
+          <p class="closing-sub">
+            Warm chai, golden evening vibes, and zero office talk — looking forward to it ✨
+          </p>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="btn-secondary" id="btn-replay">
+            <span>Replay Experience 🔄</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Milestone Celebration Overlay -->
+  <div id="celebration-overlay" role="status" aria-live="polite">
+    <div class="celebration-card">
+      <div class="celebration-emoji" id="celeb-emoji">✨🙌☕</div>
+      <h3 class="celebration-title" id="celeb-title">Yay, Anu!</h3>
+      <p class="celebration-sub" id="celeb-sub">You just made this evening way brighter.</p>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       VANILLA JAVASCRIPT: CRASH-PROOF THREE.JS + PRELOADER + INTERACTIVE FLOW
+       ========================================================================= -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* =======================================================================
+         1. GOOGLE APPS SCRIPT CONFIG, THEME LIGHTING MAP & APP STATE
+         ======================================================================= */
+      const GOOGLE_SCRIPT_URL =
+        'https://script.google.com/macros/s/AKfycbzNntC3kOK0_V-ugi1l9gs8qsjvYmTZM3i7MsYrlOlc53D863WJjynm8nEKLnxcPuXb/exec';
+
+      function generateSessionId() {
+        return (
+          'ANU-' +
+          Date.now().toString(36).toUpperCase() +
+          '-' +
+          Math.random().toString(36).slice(2, 7).toUpperCase()
+        );
+      }
+
+      function formatISODate(d) {
+        if (!d) return '';
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      }
+
+      function getISTTimestamp() {
+        try {
+          return (
+            new Intl.DateTimeFormat('en-IN', {
+              timeZone: 'Asia/Kolkata',
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: true
+            }).format(new Date()) + ' IST'
+          );
+        } catch (err) {
+          return new Date().toLocaleString() + ' IST';
+        }
+      }
+
+      async function saveToGoogleSheet(payload) {
+        try {
+          await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+          });
+          return true;
+        } catch (err) {
+          console.warn('Google Sheet sync skipped:', err);
+          return false;
+        }
+      }
+
+      const THEME_LIGHTS = {
+        entry:   { rose: 0xe26b88, gold: 0xf2a57c, star: 0xe59876 },
+        chale:   { rose: 0xe45d63, gold: 0xf49b57, star: 0xf49b57 },
+        date:    { rose: 0xb54ea8, gold: 0xec6d96, star: 0xd984c9 },
+        evening: { rose: 0xd96b38, gold: 0xeab308, star: 0xf2b544 }
+      };
+
+      const HAPPY_EMOJIS = ['✨', '🙌', '😊', '☕', '🌸', '💫', '💖', '🎉'];
+
+      const ESCAPE_MODES = [
+        { id: 'spring-glide', name: 'Spring Glide', className: 'escape-spring-glide' },
+        { id: 'spin-zip', name: '360° Spin-Zip', className: 'escape-spin-zip' },
+        { id: 'bouncy-hop', name: 'Bouncy Hop', className: 'escape-bouncy-hop' },
+        { id: 'flip-dodge', name: '3D Flip-Dodge', className: 'escape-flip-dodge' },
+        { id: 'blink-teleport', name: 'Blink-Teleport', className: 'escape-blink-teleport' },
+        { id: 'wiggle-dart', name: 'Wiggle-Dart', className: 'escape-wiggle-dart' }
+      ];
+
+      const state = {
+        sessionId: generateSessionId(),
+        currentStage: 0,
+        themeKey: 'entry',
+        escapeMode: ESCAPE_MODES[0],
+        nahiiiClicks: 0,
+        modalNahiiiMorphed: false,
+        selectedDate: null,
+        viewYear: new Date().getFullYear(),
+        viewMonth: new Date().getMonth(),
+        mouseX: 0,
+        mouseY: 0,
+        targetMouseX: 0,
+        targetMouseY: 0,
+        cameraFlyInOffset: 8.0,
+        cupSpinBoost: 0,
+        cupHopVelocity: 0,
+        cupHopOffset: 0,
+        lightBloomBoost: 0,
+        ambientEmojiTimer: null,
+        toastTimer: null,
+        preloaderInterval: null,
+        preloaderFailsafe: null,
+        threeReady: false,
+        animationStarted: false
+      };
+
+      /* =======================================================================
+         2. FLOATING BOKEH ORBS GENERATOR (Pure CSS/DOM — Works Even Without WebGL)
+         ======================================================================= */
+      function initBokehOrbs() {
+        const layer = document.getElementById('bokeh-layer');
+        if (!layer) return;
+        layer.innerHTML = '';
+        for (let i = 0; i < 14; i++) {
+          const orb = document.createElement('span');
+          orb.className = 'bokeh-orb';
+          const size = 34 + Math.random() * 88;
+          orb.style.width = size.toFixed(0) + 'px';
+          orb.style.height = size.toFixed(0) + 'px';
+          orb.style.left = (Math.random() * 94).toFixed(1) + '%';
+          orb.style.top = (Math.random() * 94).toFixed(1) + '%';
+          orb.style.setProperty('--bdur', (9 + Math.random() * 10).toFixed(1) + 's');
+          orb.style.setProperty('--bop', (0.22 + Math.random() * 0.34).toFixed(2));
+          orb.style.setProperty('--bx', ((Math.random() - 0.5) * 60).toFixed(0) + 'px');
+          orb.style.setProperty('--by', ((Math.random() - 0.5) * 70).toFixed(0) + 'px');
+          layer.appendChild(orb);
+        }
+      }
+
+      /* =======================================================================
+         3. THREE.JS 3D SCENE (Wrapped in try/catch With Graceful Fallback)
+         ======================================================================= */
+      let scene, camera, renderer;
+      let ambientLight, keyLight, roseLight, goldLight;
+      let cupGroup, haloRingOuter, haloRingInner;
+      let steamPuffs = [];
+      let orbitingProps = [];
+      let starDust = null;
+      let starDustMat = null;
+      let shockwaves = [];
+      let burstParticles = [];
+      let targetRoseColor = null;
+      let targetGoldColor = null;
+      let targetStarColor = null;
+      let clock = null;
+
+      function getResponsiveFov() {
+        return window.innerWidth <= 480 ? 54 : 46;
+      }
+
+      function initThreeScene() {
+        try {
+          const canvas = document.getElementById('webgl-canvas');
+          if (!canvas || typeof THREE === 'undefined') {
+            return;
+          }
+
+          clock = new THREE.Clock();
+          targetRoseColor = new THREE.Color(THEME_LIGHTS.entry.rose);
+          targetGoldColor = new THREE.Color(THEME_LIGHTS.entry.gold);
+          targetStarColor = new THREE.Color(THEME_LIGHTS.entry.star);
+
+          scene = new THREE.Scene();
+
+          camera = new THREE.PerspectiveCamera(
+            getResponsiveFov(),
+            window.innerWidth / window.innerHeight,
+            0.1,
+            100
+          );
+          camera.position.set(0, 1.2, 16);
+
+          // Transparent WebGL canvas so the rich CSS Aurora + Bokeh shines behind
+          renderer = new THREE.WebGLRenderer({
+            canvas: canvas,
+            antialias: true,
+            alpha: true,
+            powerPreference: 'high-performance'
+          });
+          renderer.setClearColor(0x000000, 0);
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+          renderer.setSize(window.innerWidth, window.innerHeight);
+
+          // 3-Point Warm Lighting Rig
+          ambientLight = new THREE.AmbientLight(0xfff7f4, 0.96);
+          scene.add(ambientLight);
+
+          keyLight = new THREE.DirectionalLight(0xfff5e8, 1.25);
+          keyLight.position.set(5, 8, 6);
+          scene.add(keyLight);
+
+          roseLight = new THREE.PointLight(THEME_LIGHTS.entry.rose, 2.3, 28);
+          roseLight.position.set(-5.5, 2, 4.5);
+          scene.add(roseLight);
+
+          goldLight = new THREE.PointLight(THEME_LIGHTS.entry.gold, 2.2, 28);
+          goldLight.position.set(5.5, -1.5, -3.5);
+          scene.add(goldLight);
+
+          buildSteamingTeacupWithSpoon();
+          buildOrbitingHeartsAndCrystals();
+          buildGoldenStarDust();
+
+          window.addEventListener('resize', onWindowResize);
+          state.threeReady = true;
+        } catch (err) {
+          console.warn('WebGL fallback active:', err);
+          state.threeReady = false;
+        }
+      }
+
+      function buildSteamingTeacupWithSpoon() {
+        cupGroup = new THREE.Group();
+        scene.add(cupGroup);
+
+        const porcelainMat = new THREE.MeshStandardMaterial({
+          color: 0xfffbfa,
+          roughness: 0.18,
+          metalness: 0.06
+        });
+
+        const roseGoldMat = new THREE.MeshStandardMaterial({
+          color: 0xe69783,
+          roughness: 0.18,
+          metalness: 0.85,
+          emissive: 0xd85c79,
+          emissiveIntensity: 0.12
+        });
+
+        const chaiMat = new THREE.MeshStandardMaterial({
+          color: 0xbd6b3d,
+          roughness: 0.14,
+          metalness: 0.12,
+          emissive: 0x8f401a,
+          emissiveIntensity: 0.18
+        });
+
+        // Saucer
+        const saucerPts = [
+          new THREE.Vector2(0.0, -0.78),
+          new THREE.Vector2(1.18, -0.78),
+          new THREE.Vector2(1.82, -0.68),
+          new THREE.Vector2(1.94, -0.58),
+          new THREE.Vector2(1.84, -0.55),
+          new THREE.Vector2(1.14, -0.68),
+          new THREE.Vector2(0.0, -0.68)
+        ];
+        cupGroup.add(new THREE.Mesh(new THREE.LatheGeometry(saucerPts, 44), porcelainMat));
+
+        const saucerRim = new THREE.Mesh(new THREE.TorusGeometry(1.88, 0.025, 16, 60), roseGoldMat);
+        saucerRim.rotation.x = Math.PI / 2;
+        saucerRim.position.y = -0.57;
+        cupGroup.add(saucerRim);
+
+        // Teacup Body
+        const cupPts = [
+          new THREE.Vector2(0.0, -0.66),
+          new THREE.Vector2(0.68, -0.66),
+          new THREE.Vector2(0.95, -0.34),
+          new THREE.Vector2(1.16, 0.22),
+          new THREE.Vector2(1.24, 0.68),
+          new THREE.Vector2(1.17, 0.72),
+          new THREE.Vector2(1.07, 0.66),
+          new THREE.Vector2(0.96, 0.14),
+          new THREE.Vector2(0.62, -0.52),
+          new THREE.Vector2(0.0, -0.52)
+        ];
+        cupGroup.add(new THREE.Mesh(new THREE.LatheGeometry(cupPts, 44), porcelainMat));
+
+        const cupRim = new THREE.Mesh(new THREE.TorusGeometry(1.2, 0.028, 16, 60), roseGoldMat);
+        cupRim.rotation.x = Math.PI / 2;
+        cupRim.position.y = 0.69;
+        cupGroup.add(cupRim);
+
+        // Handle
+        const handle = new THREE.Mesh(
+          new THREE.TorusGeometry(0.46, 0.082, 14, 34, Math.PI * 1.26),
+          porcelainMat
+        );
+        handle.position.set(1.14, 0.08, 0);
+        handle.rotation.z = -Math.PI * 0.63;
+        cupGroup.add(handle);
+
+        // Glowing Chai Surface
+        const chaiDisc = new THREE.Mesh(new THREE.CircleGeometry(1.08, 36), chaiMat);
+        chaiDisc.rotation.x = -Math.PI / 2;
+        chaiDisc.position.y = 0.49;
+        cupGroup.add(chaiDisc);
+
+        // Resting Rose-Gold Spoon
+        const spoonGroup = new THREE.Group();
+        const spoonStem = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.032, 1.35, 12), roseGoldMat);
+        spoonStem.rotation.z = Math.PI / 2;
+        spoonGroup.add(spoonStem);
+
+        const spoonBowl = new THREE.Mesh(new THREE.SphereGeometry(0.14, 14, 10), roseGoldMat);
+        spoonBowl.scale.set(1.35, 0.32, 0.85);
+        spoonBowl.position.set(-0.74, -0.02, 0);
+        spoonGroup.add(spoonBowl);
+
+        spoonGroup.position.set(0.35, -0.56, 1.24);
+        spoonGroup.rotation.y = -0.35;
+        spoonGroup.rotation.z = 0.07;
+        cupGroup.add(spoonGroup);
+
+        // Double Counter-Rotating Glowing Halo Rings
+        const haloMat1 = new THREE.MeshStandardMaterial({
+          color: 0xe69783,
+          emissive: 0xd85c79,
+          emissiveIntensity: 0.45,
+          roughness: 0.2,
+          metalness: 0.85,
+          transparent: true,
+          opacity: 0.72
+        });
+        const haloMat2 = new THREE.MeshStandardMaterial({
+          color: 0xf4c29f,
+          emissive: 0xe59876,
+          emissiveIntensity: 0.4,
+          roughness: 0.2,
+          metalness: 0.85,
+          transparent: true,
+          opacity: 0.62
+        });
+
+        haloRingOuter = new THREE.Mesh(new THREE.TorusGeometry(2.38, 0.022, 16, 84), haloMat1);
+        haloRingOuter.rotation.set(Math.PI / 2.6, 0.25, 0);
+        cupGroup.add(haloRingOuter);
+
+        haloRingInner = new THREE.Mesh(new THREE.TorusGeometry(2.08, 0.018, 16, 84), haloMat2);
+        haloRingInner.rotation.set(-Math.PI / 2.9, -0.3, 0);
+        cupGroup.add(haloRingInner);
+
+        // Swirling Rising 3D Steam Puffs
+        const steamGeo = new THREE.SphereGeometry(0.16, 12, 12);
+        for (let i = 0; i < 22; i++) {
+          const sMat = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.36,
+            depthWrite: false
+          });
+          const puff = new THREE.Mesh(steamGeo, sMat);
+          resetSteamPuff(puff, true);
+          cupGroup.add(puff);
+          steamPuffs.push(puff);
+        }
+
+        cupGroup.position.set(0, -0.25, -1.2);
+      }
+
+      function resetSteamPuff(puff, randomizeProgress) {
+        const angle = Math.random() * Math.PI * 2;
+        const radius = Math.random() * 0.42;
+        const progress = randomizeProgress ? Math.random() : 0;
+        puff.userData = {
+          angle: angle,
+          radius: radius,
+          progress: progress,
+          speed: 0.22 + Math.random() * 0.16,
+          swirlSpeed: (Math.random() > 0.5 ? 1 : -1) * (1.1 + Math.random() * 0.8)
+        };
+        puff.position.set(Math.cos(angle) * radius, 0.56 + progress * 2.3, Math.sin(angle) * radius);
+      }
+
+      function buildOrbitingHeartsAndCrystals() {
+        const heartShape = new THREE.Shape();
+        heartShape.moveTo(0, 0.14);
+        heartShape.bezierCurveTo(0, 0.26, -0.22, 0.34, -0.24, 0.12);
+        heartShape.bezierCurveTo(-0.26, -0.06, -0.08, -0.18, 0, -0.28);
+        heartShape.bezierCurveTo(0.08, -0.18, 0.26, -0.06, 0.24, 0.12);
+        heartShape.bezierCurveTo(0.22, 0.34, 0, 0.26, 0, 0.14);
+
+        const heartGeo = new THREE.ExtrudeGeometry(heartShape, {
+          depth: 0.08,
+          bevelEnabled: true,
+          bevelSegments: 2,
+          steps: 1,
+          bevelSize: 0.03,
+          bevelThickness: 0.03
+        });
+        heartGeo.center();
+
+        const ringGeo = new THREE.TorusGeometry(0.2, 0.044, 12, 30);
+        const crystalGeo = new THREE.OctahedronGeometry(0.2, 0);
+
+        const heartMat = new THREE.MeshStandardMaterial({
+          color: 0xe66785,
+          emissive: 0xd85c79,
+          emissiveIntensity: 0.18,
+          roughness: 0.16,
+          metalness: 0.35
+        });
+
+        const ringMat = new THREE.MeshStandardMaterial({
+          color: 0xe8a187,
+          roughness: 0.18,
+          metalness: 0.84
+        });
+
+        const crystalMat = new THREE.MeshStandardMaterial({
+          color: 0xffc1cc,
+          emissive: 0xf4a5b5,
+          emissiveIntensity: 0.16,
+          roughness: 0.14,
+          metalness: 0.3,
+          transparent: true,
+          opacity: 0.86,
+          flatShading: true
+        });
+
+        for (let i = 0; i < 18; i++) {
+          let mesh;
+          if (i % 3 === 0) mesh = new THREE.Mesh(heartGeo, heartMat);
+          else if (i % 3 === 1) mesh = new THREE.Mesh(ringGeo, ringMat);
+          else mesh = new THREE.Mesh(crystalGeo, crystalMat);
+
+          const angle = (i / 18) * Math.PI * 2;
+          const radius = 3.15 + (i % 4) * 0.88;
+          const yBase = (Math.random() - 0.5) * 4.4;
+          mesh.position.set(Math.cos(angle) * radius, yBase, Math.sin(angle) * radius - 1.5);
+          mesh.userData = {
+            angle: angle,
+            radius: radius,
+            yBase: yBase,
+            bobSpeed: 0.75 + Math.random() * 0.85,
+            rotX: (Math.random() - 0.5) * 0.022,
+            rotY: 0.012 + Math.random() * 0.014
+          };
+          scene.add(mesh);
+          orbitingProps.push(mesh);
+        }
+      }
+
+      function buildGoldenStarDust() {
+        const count = 420;
+        const positions = new Float32Array(count * 3);
+        for (let i = 0; i < count; i++) {
+          positions[i * 3] = (Math.random() - 0.5) * 26;
+          positions[i * 3 + 1] = (Math.random() - 0.5) * 18;
+          positions[i * 3 + 2] = (Math.random() - 0.5) * 18 - 3;
+        }
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+        starDustMat = new THREE.PointsMaterial({
+          color: THEME_LIGHTS.entry.star,
+          size: 0.11,
+          transparent: true,
+          opacity: 0.68
+        });
+
+        starDust = new THREE.Points(geo, starDustMat);
+        scene.add(starDust);
+      }
+
+      function spawn3DClickEffect(clientX, clientY, isBigBurst) {
+        if (!state.threeReady || !scene || !camera) return;
+        try {
+          const ndcX = (clientX / window.innerWidth) * 2 - 1;
+          const ndcY = -(clientY / window.innerHeight) * 2 + 1;
+          const vec = new THREE.Vector3(ndcX, ndcY, 0.5);
+          vec.unproject(camera);
+          const dir = vec.sub(camera.position).normalize();
+          const dist = (-1.2 - camera.position.z) / dir.z;
+          const worldPos = camera.position.clone().add(dir.multiplyScalar(dist));
+
+          const pal = THEME_LIGHTS[state.themeKey] || THEME_LIGHTS.entry;
+          const ringGeo = new THREE.RingGeometry(0.15, 0.24, 42);
+          const ringMat = new THREE.MeshBasicMaterial({
+            color: isBigBurst ? pal.gold : pal.rose,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.9
+          });
+          const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+          ringMesh.position.copy(worldPos);
+          ringMesh.lookAt(camera.position);
+          scene.add(ringMesh);
+          shockwaves.push({ mesh: ringMesh, scale: 1, opacity: 0.9, speed: isBigBurst ? 18 : 14 });
+
+          const popCount = isBigBurst ? 18 : 7;
+          const pGeo = new THREE.OctahedronGeometry(isBigBurst ? 0.11 : 0.075, 0);
+          for (let i = 0; i < popCount; i++) {
+            const pMat = new THREE.MeshStandardMaterial({
+              color: i % 2 === 0 ? pal.rose : pal.gold,
+              emissive: i % 2 === 0 ? pal.rose : pal.gold,
+              emissiveIntensity: 0.45,
+              transparent: true,
+              opacity: 1
+            });
+            const pMesh = new THREE.Mesh(pGeo, pMat);
+            pMesh.position.copy(worldPos);
+
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.random() * Math.PI;
+            const spd = (isBigBurst ? 3.8 : 2.2) + Math.random() * 2.2;
+            const vel = new THREE.Vector3(
+              Math.sin(phi) * Math.cos(theta) * spd,
+              Math.cos(phi) * spd + 0.8,
+              Math.sin(phi) * Math.sin(theta) * spd
+            );
+
+            scene.add(pMesh);
+            burstParticles.push({ mesh: pMesh, vel: vel, life: 1.0 });
+          }
+        } catch (err) {
+          // Graceful no-op
+        }
+      }
+
+      function onWindowResize() {
+        if (!state.threeReady || !camera || !renderer) return;
+        try {
+          camera.fov = getResponsiveFov();
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        } catch (err) {
+          // Graceful no-op
+        }
+      }
+
+      function animateThree() {
+        if (!state.threeReady || !renderer || !scene || !camera) return;
+        requestAnimationFrame(animateThree);
+        try {
+          const dt = Math.min(clock.getDelta(), 0.05);
+          const elapsed = clock.getElapsedTime();
+
+          // Smoothly lerp theme lighting
+          if (roseLight && targetRoseColor) roseLight.color.lerp(targetRoseColor, 0.05);
+          if (goldLight && targetGoldColor) goldLight.color.lerp(targetGoldColor, 0.05);
+          if (starDustMat && targetStarColor) starDustMat.color.lerp(targetStarColor, 0.05);
+
+          state.mouseX += (state.targetMouseX - state.mouseX) * 0.06;
+          state.mouseY += (state.targetMouseY - state.mouseY) * 0.06;
+          state.cameraFlyInOffset += (0 - state.cameraFlyInOffset) * 0.055;
+
+          state.lightBloomBoost *= 0.94;
+          if (roseLight) roseLight.intensity = 2.3 + state.lightBloomBoost * 2.4;
+          if (goldLight) goldLight.intensity = 2.2 + state.lightBloomBoost * 2.6;
+
+          const w = window.innerWidth;
+          const isNarrowPhone = w <= 480;
+          const isTablet = w > 480 && w < 860;
+
+          let targetCupX = isNarrowPhone ? 0 : (isTablet ? 1.8 : 2.75);
+          let targetCupY = isNarrowPhone ? -2.35 : -0.24;
+          let targetCamZ = isNarrowPhone ? 11.4 : (isTablet ? 9.6 : 8.5);
+          let targetScale = isNarrowPhone ? 0.78 : 1.0;
+
+          if (state.currentStage === 1) {
+            targetCupX = isNarrowPhone ? 0 : (isTablet ? -1.8 : -2.75);
+            targetCupY = isNarrowPhone ? -2.3 : -0.18;
+          } else if (state.currentStage === 2) {
+            targetCupX = isNarrowPhone ? 0 : (isTablet ? 2.0 : 2.95);
+            targetCupY = isNarrowPhone ? -2.55 : -0.3;
+            targetCamZ = isNarrowPhone ? 12.0 : 8.8;
+          } else if (state.currentStage === 3) {
+            targetCupX = isNarrowPhone ? 0 : (isTablet ? -1.9 : -2.8);
+            targetCupY = isNarrowPhone ? -2.4 : -0.2;
+          } else if (state.currentStage === 4) {
+            targetCupX = isNarrowPhone ? 0 : (isTablet ? 1.9 : 2.8);
+            targetCupY = isNarrowPhone ? -2.3 : -0.15;
+            targetCamZ = isNarrowPhone ? 11.0 : 8.2;
+          }
+
+          if (state.cupHopOffset > 0 || state.cupHopVelocity > 0) {
+            state.cupHopOffset += state.cupHopVelocity * dt;
+            state.cupHopVelocity -= 9.5 * dt;
+            if (state.cupHopOffset <= 0) {
+              state.cupHopOffset = 0;
+              state.cupHopVelocity = 0;
+            }
+          }
+
+          if (cupGroup) {
+            const levitate = Math.sin(elapsed * 1.45) * 0.16;
+            cupGroup.position.x += (targetCupX - cupGroup.position.x) * 0.055;
+            cupGroup.position.y += (targetCupY + levitate + state.cupHopOffset - cupGroup.position.y) * 0.08;
+
+            const curScale = cupGroup.scale.x + (targetScale - cupGroup.scale.x) * 0.06;
+            cupGroup.scale.setScalar(curScale);
+
+            state.cupSpinBoost *= 0.93;
+            cupGroup.rotation.y += 0.0065 + state.cupSpinBoost;
+            cupGroup.rotation.x = Math.sin(elapsed * 0.85) * 0.07 + state.mouseY * 0.08;
+            cupGroup.rotation.z = Math.sin(elapsed * 1.7) * 0.055 - state.mouseX * 0.06;
+          }
+
+          if (haloRingOuter) {
+            haloRingOuter.rotation.z += 0.011 + state.cupSpinBoost * 0.6;
+            haloRingOuter.rotation.y += 0.004;
+          }
+          if (haloRingInner) {
+            haloRingInner.rotation.z -= 0.015 + state.cupSpinBoost * 0.8;
+            haloRingInner.rotation.x += 0.003;
+          }
+
+          camera.position.x += (state.mouseX * 0.68 - camera.position.x) * 0.05;
+          camera.position.y += (1.15 - state.mouseY * 0.38 - camera.position.y) * 0.05;
+          camera.position.z += (targetCamZ + state.cameraFlyInOffset - camera.position.z) * 0.055;
+          camera.lookAt(0, -0.15, -1.2);
+
+          steamPuffs.forEach((puff) => {
+            puff.userData.progress += dt * puff.userData.speed;
+            if (puff.userData.progress >= 1) resetSteamPuff(puff, false);
+            const p = puff.userData.progress;
+            const swirlAngle = puff.userData.angle + p * Math.PI * 1.6 * puff.userData.swirlSpeed;
+            const swirlRadius = puff.userData.radius * (1 + p * 0.9);
+            puff.position.y = 0.56 + p * 2.3;
+            puff.position.x = Math.cos(swirlAngle) * swirlRadius;
+            puff.position.z = Math.sin(swirlAngle) * swirlRadius;
+            puff.scale.setScalar(0.42 + p * 1.32);
+            puff.material.opacity = Math.sin(p * Math.PI) * 0.35;
+          });
+
+          orbitingProps.forEach((obj) => {
+            const a = obj.userData.angle + elapsed * 0.16;
+            obj.position.x = Math.cos(a) * obj.userData.radius;
+            obj.position.z = Math.sin(a) * obj.userData.radius - 1.5;
+            obj.position.y = obj.userData.yBase + Math.sin(elapsed * obj.userData.bobSpeed + a) * 0.34;
+            obj.rotation.x += obj.userData.rotX;
+            obj.rotation.y += obj.userData.rotY;
+          });
+
+          if (starDust && starDustMat) {
+            starDust.rotation.y = elapsed * 0.03 + state.mouseX * 0.08;
+            starDust.rotation.x = state.mouseY * 0.05;
+            starDustMat.opacity = 0.52 + Math.sin(elapsed * 2.4) * 0.16;
+          }
+
+          for (let i = shockwaves.length - 1; i >= 0; i--) {
+            const sw = shockwaves[i];
+            sw.scale += dt * sw.speed;
+            sw.opacity -= dt * 1.45;
+            sw.mesh.scale.setScalar(sw.scale);
+            sw.mesh.material.opacity = Math.max(0, sw.opacity);
+            if (sw.opacity <= 0) {
+              scene.remove(sw.mesh);
+              sw.mesh.geometry.dispose();
+              sw.mesh.material.dispose();
+              shockwaves.splice(i, 1);
+            }
+          }
+
+          for (let i = burstParticles.length - 1; i >= 0; i--) {
+            const bp = burstParticles[i];
+            bp.life -= dt * 1.35;
+            bp.vel.y -= 3.6 * dt;
+            bp.mesh.position.addScaledVector(bp.vel, dt);
+            bp.mesh.rotation.x += 0.14;
+            bp.mesh.rotation.y += 0.18;
+            bp.mesh.scale.setScalar(Math.max(0.01, bp.life));
+            bp.mesh.material.opacity = Math.max(0, bp.life);
+            if (bp.life <= 0) {
+              scene.remove(bp.mesh);
+              bp.mesh.geometry.dispose();
+              bp.mesh.material.dispose();
+              burstParticles.splice(i, 1);
+            }
+          }
+
+          renderer.render(scene, camera);
+        } catch (err) {
+          // Keep UI running smoothly even if a frame errors
+        }
+      }
+
+      /* =======================================================================
+         4. THEME SWITCHER (CSS Variables + Three.js Light Targets)
+         ======================================================================= */
+      function setTheme(themeKey) {
+        state.themeKey = themeKey;
+        document.documentElement.setAttribute('data-theme', themeKey);
+        const pal = THEME_LIGHTS[themeKey];
+        if (pal && state.threeReady && targetRoseColor && targetGoldColor && targetStarColor) {
+          targetRoseColor.setHex(pal.rose);
+          targetGoldColor.setHex(pal.gold);
+          targetStarColor.setHex(pal.star);
+        }
+      }
+
+      /* =======================================================================
+         5. INDEPENDENT PRELOADER + 2.2s HARD FAILSAFE (Never Stuck Blank)
+         ======================================================================= */
+      function finishPreloader() {
+        const preloader = document.getElementById('preloader');
+        if (!preloader || preloader.classList.contains('is-done')) return;
+
+        if (state.preloaderInterval) {
+          clearInterval(state.preloaderInterval);
+          state.preloaderInterval = null;
+        }
+        if (state.preloaderFailsafe) {
+          clearTimeout(state.preloaderFailsafe);
+          state.preloaderFailsafe = null;
+        }
+
+        preloader.classList.add('is-opening');
+        document.body.classList.add('entry-revealed');
+        state.cupSpinBoost = 0.22;
+
+        setTimeout(() => {
+          preloader.classList.add('is-done');
+        }, 880);
+      }
+
+      function runPreloaderSequence() {
+        const preloader = document.getElementById('preloader');
+        const percentEl = document.getElementById('loader-percent');
+        const barEl = document.getElementById('loader-bar-fill');
+        const ringEl = document.getElementById('loader-ring-progress');
+        if (!preloader) {
+          document.body.classList.add('entry-revealed');
+          return;
+        }
+
+        if (state.preloaderInterval) clearInterval(state.preloaderInterval);
+        if (state.preloaderFailsafe) clearTimeout(state.preloaderFailsafe);
+
+        document.body.classList.remove('entry-revealed');
+        preloader.classList.remove('is-done', 'is-opening');
+        state.cameraFlyInOffset = 8.0;
+
+        const circumference = 289;
+        let progress = 0;
+
+        if (percentEl) percentEl.textContent = '0%';
+        if (barEl) barEl.style.width = '0%';
+        if (ringEl) ringEl.style.strokeDashoffset = String(circumference);
+
+        // Smooth ~1.3s progress animation
+        state.preloaderInterval = setInterval(() => {
+          progress += 5;
+          if (progress >= 100) {
+            progress = 100;
+            if (percentEl) percentEl.textContent = '100%';
+            if (barEl) barEl.style.width = '100%';
+            if (ringEl) ringEl.style.strokeDashoffset = '0';
+            clearInterval(state.preloaderInterval);
+            state.preloaderInterval = null;
+            setTimeout(finishPreloader, 140);
+          } else {
+            if (percentEl) percentEl.textContent = progress + '%';
+            if (barEl) barEl.style.width = progress + '%';
+            if (ringEl) {
+              ringEl.style.strokeDashoffset = String(circumference * (1 - progress / 100));
+            }
+          }
+        }, 58);
+
+        // Hard 2.2s failsafe guarantees screen can NEVER stay stuck
+        state.preloaderFailsafe = setTimeout(() => {
+          finishPreloader();
+        }, 2200);
+      }
+
+      /* =======================================================================
+         6. 6 RANDOMIZED RUNAWAY POSITION-RELEASE ENGINE (With 5-Chase Morph Support)
+         ======================================================================= */
+      const runawayLayer = document.getElementById('runaway-layer');
+      const runawayMap = new Map();
+
+      function pickRandomEscapeMode(excludeId) {
+        const pool = excludeId ? ESCAPE_MODES.filter((m) => m.id !== excludeId) : ESCAPE_MODES;
+        const chosen = pool[Math.floor(Math.random() * pool.length)];
+        state.escapeMode = chosen;
+
+        const label = document.getElementById('escape-mode-label');
+        if (label) label.textContent = 'Escape: ' + chosen.name;
+
+        const allClasses = ESCAPE_MODES.map((m) => m.className);
+        document.querySelectorAll('.js-runaway').forEach((btn) => {
+          btn.classList.remove(...allClasses);
+          btn.classList.add(chosen.className);
+        });
+      }
+
+      function showTeaseToast(message) {
+        const toast = document.getElementById('tease-toast');
+        if (!toast) return;
+        toast.textContent = message;
+        toast.classList.add('is-visible');
+        if (state.toastTimer) clearTimeout(state.toastTimer);
+        state.toastTimer = setTimeout(() => {
+          toast.classList.remove('is-visible');
+        }, 2100);
+      }
+
+      function getSafeAreaInsets() {
+        const probe = document.getElementById('safe-area-probe');
+        if (!probe) return { top: 0, bottom: 0 };
+        const style = getComputedStyle(probe);
+        return {
+          top: parseFloat(style.paddingTop) || 0,
+          bottom: parseFloat(style.paddingBottom) || 0
+        };
+      }
+
+      function initRunawayButtons() {
+        document.querySelectorAll('.js-runaway').forEach((btn) => {
+          const phrases = JSON.parse(btn.getAttribute('data-phrases') || '["Nice try Anu 😉"]');
+          const homeId = btn.getAttribute('data-home');
+          const maxChases = parseInt(btn.getAttribute('data-max-chases') || '0', 10);
+
+          runawayMap.set(btn.id, {
+            btn: btn,
+            homeId: homeId,
+            phrases: phrases,
+            phraseIdx: 0,
+            escaped: false,
+            spinCount: 0,
+            flipCount: 0,
+            lastEscape: 0,
+            chases: 0,
+            maxChases: maxChases,
+            lockedAsPrimary: false
+          });
+
+          const onAttempt = (e) => {
+            const info = runawayMap.get(btn.id);
+            if (info && info.lockedAsPrimary) {
+              // Morphed into Open Invite — allow normal click through
+              return;
+            }
+            if (e) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+            escapeButton(btn.id, e);
+          };
+
+          btn.addEventListener('pointerenter', onAttempt);
+          btn.addEventListener('pointerdown', onAttempt);
+          btn.addEventListener('touchstart', onAttempt, { passive: false });
+          btn.addEventListener('click', onAttempt);
+        });
+      }
+
+      function computeSafeCoords(btn, evt) {
+        const insets = getSafeAreaInsets();
+        const padX = 16;
+        const padTop = 76 + insets.top;
+        const padBottom = 34 + insets.bottom;
+
+        const w = Math.min(btn.offsetWidth || 136, window.innerWidth - padX * 2);
+        const h = btn.offsetHeight || 48;
+
+        const minX = padX;
+        const maxX = Math.max(minX, window.innerWidth - w - padX);
+        const minY = padTop;
+        const maxY = Math.max(minY, window.innerHeight - h - padBottom);
+
+        let px = window.innerWidth / 2;
+        let py = window.innerHeight / 2;
+        if (evt) {
+          if (evt.touches && evt.touches[0]) {
+            px = evt.touches[0].clientX;
+            py = evt.touches[0].clientY;
+          } else if (typeof evt.clientX === 'number') {
+            px = evt.clientX;
+            py = evt.clientY;
+          }
+        }
+
+        let x = minX;
+        let y = minY;
+        const minJumpDist = window.innerWidth <= 480 ? 110 : 155;
+        for (let i = 0; i < 14; i++) {
+          const cx = minX + Math.random() * (maxX - minX);
+          const cy = minY + Math.random() * (maxY - minY);
+          x = cx;
+          y = cy;
+          if (Math.hypot(cx - px, cy - py) > minJumpDist) break;
+        }
+        return {
+          x: Math.round(Math.min(Math.max(x, minX), maxX)),
+          y: Math.round(Math.min(Math.max(y, minY), maxY))
+        };
+      }
+
+      function morphModalNahiiiToOpenInvite(info) {
+        info.lockedAsPrimary = true;
+        state.modalNahiiiMorphed = true;
+
+        const btn = info.btn;
+        const home = document.getElementById(info.homeId);
+        if (home) home.appendChild(btn);
+        info.escaped = false;
+        btn.style.position = '';
+        btn.style.left = '';
+        btn.style.top = '';
+        btn.style.width = '';
+        btn.style.transform = '';
+        btn.style.opacity = '1';
+
+        btn.innerHTML = '<span>Open Invite ✨</span>';
+        btn.classList.add('is-morphed-primary');
+
+        const counterEl = document.getElementById('chase-counter-pill');
+        if (counterEl) counterEl.innerHTML = '<span>Chase Attempts: 5 / 5 — Unlocked! ✨</span>';
+
+        const modalSub = document.getElementById('nahiii-modal-sub');
+        if (modalSub) {
+          modalSub.textContent = "You hit all attempts! Ab toh we're going forward 😉✨";
+        }
+        showTeaseToast("You hit all attempts! Ab toh we're going forward 😉✨");
+
+        // Celebratory burst + auto-advance to Step 2 ("Chale?")
+        spawn3DClickEffect(window.innerWidth * 0.5, window.innerHeight * 0.5, true);
+        for (let i = 0; i < 12; i++) setTimeout(spawnFloatingEmoji, i * 50);
+
+        setTimeout(() => {
+          closeNahiiiModalAndProceed();
+        }, 1500);
+      }
+
+      function escapeButton(id, evt) {
+        const info = runawayMap.get(id);
+        if (!info || info.lockedAsPrimary) return;
+
+        const now = performance.now();
+        if (now - info.lastEscape < 160) return;
+        info.lastEscape = now;
+
+        info.chases++;
+
+        // Count modal Nahiii chases in total nahiiiClicks for Sheet telemetry
+        if (id === 'btn-modal-nahiii') {
+          state.nahiiiClicks++;
+        }
+
+        // Handle 5-chase limit for Modal "Nahiii 🙈"
+        if (info.maxChases > 0) {
+          const counterEl = document.getElementById('chase-counter-pill');
+          if (counterEl) {
+            counterEl.innerHTML = `<span>Chase Attempts: ${Math.min(info.chases, info.maxChases)} / ${info.maxChases}</span>`;
+          }
+          if (info.chases >= info.maxChases) {
+            morphModalNahiiiToOpenInvite(info);
+            return;
+          }
+        }
+
+        const btn = info.btn;
+        const rect = btn.getBoundingClientRect();
+
+        if (!info.escaped) {
+          btn.style.left = rect.left + 'px';
+          btn.style.top = rect.top + 'px';
+          btn.style.width = Math.min(rect.width, window.innerWidth - 32) + 'px';
+          runawayLayer.appendChild(btn);
+          info.escaped = true;
+          void btn.offsetWidth;
+        }
+
+        const msg = info.phrases[info.phraseIdx % info.phrases.length];
+        info.phraseIdx++;
+        showTeaseToast(msg);
+
+        const pos = computeSafeCoords(btn, evt);
+        const modeId = state.escapeMode.id;
+
+        if (modeId === 'spring-glide') {
+          const tilt = ((Math.random() - 0.5) * 14).toFixed(1);
+          btn.style.left = pos.x + 'px';
+          btn.style.top = pos.y + 'px';
+          btn.style.transform = `rotate(${tilt}deg) scale(1.03)`;
+        } else if (modeId === 'spin-zip') {
+          info.spinCount += 360;
+          btn.style.left = pos.x + 'px';
+          btn.style.top = pos.y + 'px';
+          btn.style.transform = `rotate(${info.spinCount}deg) scale(1.04)`;
+        } else if (modeId === 'bouncy-hop') {
+          btn.classList.remove('anim-bouncy-hop');
+          void btn.offsetWidth;
+          btn.style.left = pos.x + 'px';
+          btn.style.top = pos.y + 'px';
+          btn.classList.add('anim-bouncy-hop');
+        } else if (modeId === 'flip-dodge') {
+          info.flipCount += 180;
+          const rx = info.flipCount % 360 === 0 ? 0 : 20;
+          btn.style.left = pos.x + 'px';
+          btn.style.top = pos.y + 'px';
+          btn.style.transform = `perspective(500px) rotateY(${info.flipCount}deg) rotateX(${rx}deg)`;
+        } else if (modeId === 'blink-teleport') {
+          btn.style.opacity = '0';
+          btn.style.transform = 'scale(0.32)';
+          setTimeout(() => {
+            btn.style.left = pos.x + 'px';
+            btn.style.top = pos.y + 'px';
+            btn.style.opacity = '1';
+            btn.style.transform = 'scale(1.06)';
+            setTimeout(() => {
+              btn.style.transform = 'scale(1)';
+            }, 130);
+          }, 130);
+        } else if (modeId === 'wiggle-dart') {
+          btn.classList.remove('anim-wiggle');
+          void btn.offsetWidth;
+          btn.classList.add('anim-wiggle');
+          setTimeout(() => {
+            btn.style.left = pos.x + 'px';
+            btn.style.top = pos.y + 'px';
+          }, 130);
+        }
+      }
+
+      function hideEscapedButtons() {
+        runawayMap.forEach((info) => {
+          if (info.escaped) {
+            info.btn.style.display = 'none';
+          }
+        });
+      }
+
+      function resetAllRunawayButtons() {
+        runawayMap.forEach((info) => {
+          const home = document.getElementById(info.homeId);
+          info.escaped = false;
+          info.spinCount = 0;
+          info.flipCount = 0;
+          info.phraseIdx = 0;
+          info.chases = 0;
+          info.lockedAsPrimary = false;
+          info.btn.style.display = '';
+          info.btn.style.position = '';
+          info.btn.style.left = '';
+          info.btn.style.top = '';
+          info.btn.style.width = '';
+          info.btn.style.transform = '';
+          info.btn.style.opacity = '';
+          info.btn.classList.remove('is-morphed-primary');
+          if (info.btn.id === 'btn-modal-nahiii') {
+            info.btn.innerHTML = '<span>Nahiii 🙈</span>';
+          }
+          if (home) home.appendChild(info.btn);
+        });
+      }
+
+      /* =======================================================================
+         7. "NAHIII" 3-CLICK COMEDY SEQUENCE, SPAM STORM & MODAL
+         ======================================================================= */
+      function triggerNahiiiSpamStorm() {
+        const spamLayer = document.getElementById('nahiii-spam-layer');
+        if (!spamLayer) return;
+
+        spamLayer.innerHTML = '';
+        spamLayer.classList.add('is-active');
+
+        const spamTexts = [
+          'Nahiii 😳',
+          'Nahiiii?!',
+          'Har baar Nahiii?! 😅',
+          'Seriously Nahiii?!',
+          'Nahiii × 100 😂',
+          'Chai ko Nahiii?! ☕',
+          'System Overload: Nahiii!'
+        ];
+
+        const totalBubbles = 28;
+        for (let i = 0; i < totalBubbles; i++) {
+          setTimeout(() => {
+            const bubble = document.createElement('div');
+            bubble.className = 'spam-bubble';
+            bubble.textContent = spamTexts[i % spamTexts.length];
+            bubble.style.left = (12 + Math.random() * 76).toFixed(1) + '%';
+            bubble.style.top = (14 + Math.random() * 74).toFixed(1) + '%';
+            bubble.style.fontSize = (0.9 + Math.random() * 0.55).toFixed(2) + 'rem';
+            bubble.style.setProperty('--srot', ((Math.random() - 0.5) * 28).toFixed(0) + 'deg');
+            spamLayer.appendChild(bubble);
+          }, i * 65);
+        }
+
+        // After 2.1s storm, open the glassmorphic modal
+        setTimeout(() => {
+          spamLayer.classList.remove('is-active');
+          spamLayer.innerHTML = '';
+          openNahiiiModal();
+        }, 2100);
+      }
+
+      function openNahiiiModal() {
+        const modal = document.getElementById('nahiii-modal');
+        if (modal) modal.classList.add('is-open');
+      }
+
+      function closeNahiiiModalAndProceed() {
+        const modal = document.getElementById('nahiii-modal');
+        if (modal) modal.classList.remove('is-open');
+        hideEscapedButtons();
+        proceedToChaleStep();
+      }
+
+      function proceedToChaleStep() {
+        setTheme('chale');
+        state.cupSpinBoost = 0.28;
+        state.cupHopVelocity = 3.2;
+        state.lightBloomBoost = 0.9;
+        spawn3DClickEffect(window.innerWidth * 0.5, window.innerHeight * 0.5, true);
+        goToStage(1);
+      }
+
+      /* =======================================================================
+         8. MILESTONE CELEBRATIONS & STAGE TRANSITIONS
+         ======================================================================= */
+      function spawnFloatingEmoji() {
+        const layer = document.getElementById('emoji-layer');
+        if (!layer) return;
+        const el = document.createElement('span');
+        el.className = 'floating-emoji';
+        el.textContent = HAPPY_EMOJIS[Math.floor(Math.random() * HAPPY_EMOJIS.length)];
+        el.style.left = (5 + Math.random() * 90).toFixed(1) + 'vw';
+        el.style.fontSize = (1.3 + Math.random() * 1.05).toFixed(2) + 'rem';
+        el.style.setProperty('--dur', (3.6 + Math.random() * 2.4).toFixed(2) + 's');
+        el.style.setProperty('--drift', ((Math.random() - 0.5) * 95).toFixed(0) + 'px');
+        el.style.setProperty('--rot', ((Math.random() - 0.5) * 65).toFixed(0) + 'deg');
+        layer.appendChild(el);
+        setTimeout(() => el.remove(), 6200);
+      }
+
+      function startGentleAmbientEmojis() {
+        if (state.ambientEmojiTimer) clearInterval(state.ambientEmojiTimer);
+        state.ambientEmojiTimer = setInterval(spawnFloatingEmoji, 950);
+      }
+
+      function triggerMilestoneCelebration(emojiStr, title, sub, nextTheme, nextStage) {
+        hideEscapedButtons();
+        if (nextTheme) setTheme(nextTheme);
+
+        const bloomEl = document.getElementById('bloom-flash');
+        if (bloomEl) {
+          bloomEl.classList.add('is-blooming');
+          setTimeout(() => bloomEl.classList.remove('is-blooming'), 1400);
+        }
+
+        state.cupSpinBoost = 0.34;
+        state.cupHopVelocity = 3.8;
+        state.lightBloomBoost = 1.0;
+        spawn3DClickEffect(window.innerWidth * 0.5, window.innerHeight * 0.5, true);
+
+        for (let i = 0; i < 22; i++) {
+          setTimeout(spawnFloatingEmoji, i * 48);
+        }
+
+        const overlay = document.getElementById('celebration-overlay');
+        document.getElementById('celeb-emoji').textContent = emojiStr;
+        document.getElementById('celeb-title').textContent = title;
+        document.getElementById('celeb-sub').textContent = sub;
+
+        overlay.classList.add('is-visible');
+        setTimeout(() => goToStage(nextStage), 1080);
+        setTimeout(() => overlay.classList.remove('is-visible'), 1580);
+      }
+
+      function goToStage(nextIdx) {
+        const prevEl = document.getElementById('stage-' + state.currentStage);
+        const nextEl = document.getElementById('stage-' + nextIdx);
+        if (!nextEl) return;
+
+        if (prevEl && prevEl !== nextEl) {
+          prevEl.classList.remove('is-active');
+          prevEl.classList.add('is-leaving');
+          setTimeout(() => prevEl.classList.remove('is-leaving'), 700);
+        }
+        state.currentStage = nextIdx;
+        nextEl.classList.add('is-active');
+      }
+
+      /* =======================================================================
+         9. CUSTOM 3D ANIMATED CALENDAR DATE PICKER
+         ======================================================================= */
+      const MONTH_NAMES = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+      ];
+      const SHORT_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+      function formatCleanDate(d) {
+        return `${SHORT_DAYS[d.getDay()]}, ${d.getDate()} ${MONTH_NAMES[d.getMonth()].slice(0, 3)} ${d.getFullYear()}`;
+      }
+
+      function renderCalendar(flipDir) {
+        const titleEl = document.getElementById('cal-month-title');
+        const gridEl = document.getElementById('cal-days-grid');
+        if (!titleEl || !gridEl) return;
+
+        const build = () => {
+          titleEl.textContent = `${MONTH_NAMES[state.viewMonth]} ${state.viewYear}`;
+          gridEl.innerHTML = '';
+
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          const firstDay = new Date(state.viewYear, state.viewMonth, 1).getDay();
+          const daysInMonth = new Date(state.viewYear, state.viewMonth + 1, 0).getDate();
+
+          for (let i = 0; i < firstDay; i++) {
+            const empty = document.createElement('span');
+            empty.className = 'cal-day-tile is-empty';
+            gridEl.appendChild(empty);
+          }
+
+          for (let day = 1; day <= daysInMonth; day++) {
+            const tileDate = new Date(state.viewYear, state.viewMonth, day);
+            tileDate.setHours(0, 0, 0, 0);
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'cal-day-tile';
+            btn.textContent = day;
+
+            const isPast = tileDate < today;
+            const isToday = tileDate.getTime() === today.getTime();
+            const isSelected = state.selectedDate && tileDate.getTime() === state.selectedDate.getTime();
+
+            if (isPast) {
+              btn.classList.add('is-disabled');
+              btn.disabled = true;
+            } else {
+              if (isToday) btn.classList.add('is-today');
+              if (isSelected) btn.classList.add('is-selected');
+              btn.addEventListener('click', () => {
+                state.selectedDate = tileDate;
+                renderCalendar();
+                const pill = document.getElementById('selected-date-pill');
+                if (pill) {
+                  pill.innerHTML = `<span>✨ Selected: <strong>${formatCleanDate(tileDate)}</strong></span>`;
+                }
+                const confirmBtn = document.getElementById('btn-confirm-date');
+                if (confirmBtn) confirmBtn.classList.remove('is-locked');
+              });
+            }
+            gridEl.appendChild(btn);
+          }
+        };
+
+        if (flipDir) {
+          const cls = flipDir === 'next' ? 'is-flipping-next' : 'is-flipping-prev';
+          gridEl.classList.add(cls);
+          setTimeout(() => {
+            build();
+            gridEl.classList.remove(cls);
+          }, 190);
+        } else {
+          build();
+        }
+      }
+
+      function attach3DTilt(el) {
+        if (!el) return;
+        el.addEventListener('mousemove', (e) => {
+          const rect = el.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / rect.width - 0.5;
+          const y = (e.clientY - rect.top) / rect.height - 0.5;
+          el.style.transform = `perspective(950px) rotateX(${(-y * 11).toFixed(2)}deg) rotateY(${(x * 11).toFixed(2)}deg)`;
+        });
+        el.addEventListener('mouseleave', () => {
+          el.style.transform = 'perspective(950px) rotateX(0deg) rotateY(0deg)';
+        });
+      }
+
+      /* =======================================================================
+         10. GLOBAL CLICK / TAP RIPPLE + SPARKLE BURST + 3D SHOCKWAVE
+         ======================================================================= */
+      function triggerGlobalClickFX(x, y) {
+        const ripple = document.createElement('span');
+        ripple.className = 'click-ripple-ring';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        document.body.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 740);
+
+        for (let i = 0; i < 6; i++) {
+          const p = document.createElement('span');
+          p.className = 'click-sparkle';
+          p.textContent = HAPPY_EMOJIS[Math.floor(Math.random() * HAPPY_EMOJIS.length)];
+          p.style.left = x + 'px';
+          p.style.top = y + 'px';
+          const angle = (i / 6) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
+          const dist = 32 + Math.random() * 44;
+          p.style.setProperty('--tx', (Math.cos(angle) * dist).toFixed(0) + 'px');
+          p.style.setProperty('--ty', (Math.sin(angle) * dist).toFixed(0) + 'px');
+          p.style.setProperty('--tr', ((Math.random() - 0.5) * 90).toFixed(0) + 'deg');
+          document.body.appendChild(p);
+          setTimeout(() => p.remove(), 800);
+        }
+
+        spawn3DClickEffect(x, y, false);
+      }
+
+      function initPointerEffects() {
+        window.addEventListener('mousemove', (e) => {
+          state.targetMouseX = (e.clientX / window.innerWidth) * 2 - 1;
+          state.targetMouseY = (e.clientY / window.innerHeight) * 2 - 1;
+        });
+
+        window.addEventListener('touchmove', (e) => {
+          if (e.touches && e.touches[0]) {
+            state.targetMouseX = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
+            state.targetMouseY = (e.touches[0].clientY / window.innerHeight) * 2 - 1;
+          }
+        }, { passive: true });
+
+        window.addEventListener('pointerdown', (e) => {
+          triggerGlobalClickFX(e.clientX, e.clientY);
+        });
+      }
+
+      /* =======================================================================
+         11. INTERACTIVE FLOW LISTENERS & FULL REPLAY
+         ======================================================================= */
+      function initFlowListeners() {
+        // Step 1: Open Invite -> Step 2 ("Chale?") + Theme Color Shift
+        document.getElementById('btn-open-invite').addEventListener('click', () => {
+          proceedToChaleStep();
+        });
+
+        // Step 1: "Nahiii" 3-Click Comedy Sequence
+        const btnEntryNahiii = document.getElementById('btn-entry-nahiii');
+        const entryCard = document.getElementById('entry-glass-card');
+        const entryStatus = document.getElementById('entry-status-note');
+
+        btnEntryNahiii.addEventListener('click', () => {
+          state.nahiiiClicks++;
+
+          if (state.nahiiiClicks === 1) {
+            btnEntryNahiii.classList.remove('shake-nudge');
+            void btnEntryNahiii.offsetWidth;
+            btnEntryNahiii.classList.add('shake-nudge');
+            if (entryStatus) {
+              entryStatus.textContent = 'Kya? 😳';
+              entryStatus.classList.add('is-shown');
+            }
+            showTeaseToast('Kya? 😳');
+          } else if (state.nahiiiClicks === 2) {
+            if (entryCard) {
+              entryCard.classList.remove('card-glitch-shake');
+              void entryCard.offsetWidth;
+              entryCard.classList.add('card-glitch-shake');
+            }
+            if (entryStatus) {
+              entryStatus.textContent = 'I think system mein koi problem aa gayi hai... 🤔💻';
+              entryStatus.classList.add('is-shown');
+            }
+            showTeaseToast('I think system mein koi problem aa gayi hai... 🤔💻');
+          } else {
+            triggerNahiiiSpamStorm();
+          }
+        });
+
+        // Modal Open Invite button (and morphed Nahiii button)
+        document.getElementById('btn-modal-open').addEventListener('click', () => {
+          closeNahiiiModalAndProceed();
+        });
+        document.getElementById('btn-modal-nahiii').addEventListener('click', () => {
+          if (state.modalNahiiiMorphed) {
+            closeNahiiiModalAndProceed();
+          }
+        });
+
+        // Step 2: Yes -> Celebration + Lavender-Rose Theme -> Step 3 (3D Calendar)
+        document.getElementById('btn-yes-chai').addEventListener('click', () => {
+          triggerMilestoneCelebration(
+            '✨🙌☕',
+            'Yay, Anu!',
+            'Knew you wouldn’t say no to evening chai — now let’s pick our day ✨',
+            'date',
+            2
+          );
+        });
+
+        // Step 3: Calendar Navigation
+        document.getElementById('cal-prev-btn').addEventListener('click', () => {
+          state.viewMonth--;
+          if (state.viewMonth < 0) {
+            state.viewMonth = 11;
+            state.viewYear--;
+          }
+          renderCalendar('prev');
+        });
+
+        document.getElementById('cal-next-btn').addEventListener('click', () => {
+          state.viewMonth++;
+          if (state.viewMonth > 11) {
+            state.viewMonth = 0;
+            state.viewYear++;
+          }
+          renderCalendar('next');
+        });
+
+        // Step 3: Confirm Date -> Celebration + Champagne Golden-Hour Theme -> Step 4
+        document.getElementById('btn-confirm-date').addEventListener('click', () => {
+          const calCard = document.getElementById('calendar-3d-card');
+          const pill = document.getElementById('selected-date-pill');
+
+          if (!state.selectedDate) {
+            if (calCard) {
+              calCard.classList.remove('shake-nudge');
+              void calCard.offsetWidth;
+              calCard.classList.add('shake-nudge');
+            }
+            if (pill) {
+              pill.innerHTML = '<span>☕ Tap a date on the calendar first, Anu ✨</span>';
+            }
+            return;
+          }
+
+          const formatted = formatCleanDate(state.selectedDate);
+          const ticketDate = document.getElementById('ticket-date-value');
+          if (ticketDate) ticketDate.textContent = formatted;
+
+          // Save Step 1 (Date Picked) immediately to Google Sheet without blocking UI
+          saveToGoogleSheet({
+            sessionId: state.sessionId,
+            guest: 'Anu',
+            selectedDate: formatISODate(state.selectedDate),
+            formattedDate: formatted,
+            timeSlot: 'Pending',
+            status: 'Date Picked',
+            nahiiiClicks: state.nahiiiClicks,
+            escapeMode: state.escapeMode.name,
+            timestamp: getISTTimestamp()
+          });
+          showTeaseToast('Date locked & saved ✨');
+
+          triggerMilestoneCelebration(
+            '🌸✨🙌',
+            'Date Locked, Anu!',
+            `${formatted} is officially marked on the calendar ✨`,
+            'evening',
+            3
+          );
+        });
+
+        // Step 4: Evening -> Save Final Confirmation to Google Sheet -> Step 5 (Evening Chai Pass)
+        document.getElementById('btn-time-evening').addEventListener('click', () => {
+          const chosenDate = state.selectedDate || new Date();
+          const formatted = formatCleanDate(chosenDate);
+
+          saveToGoogleSheet({
+            sessionId: state.sessionId,
+            guest: 'Anu',
+            selectedDate: formatISODate(chosenDate),
+            formattedDate: formatted,
+            timeSlot: 'Evening (Post-Work Chai)',
+            status: 'Confirmed',
+            nahiiiClicks: state.nahiiiClicks,
+            escapeMode: state.escapeMode.name,
+            timestamp: getISTTimestamp()
+          }).then((ok) => {
+            const syncPill = document.getElementById('sheet-sync-pill');
+            if (syncPill && ok) {
+              syncPill.classList.add('is-synced');
+            }
+          });
+
+          triggerMilestoneCelebration(
+            '🌆✨☕',
+            'Evening Chai It Is!',
+            'Golden hour, warm chai, and great company — your pass is ready, Anu ✨',
+            'evening',
+            4
+          );
+        });
+
+        // Step 5: Replay Experience -> Reset All + New Session ID + New Random Escape Mode
+        document.getElementById('btn-replay').addEventListener('click', () => {
+          resetAllRunawayButtons();
+          state.sessionId = generateSessionId();
+          state.nahiiiClicks = 0;
+          state.modalNahiiiMorphed = false;
+          state.selectedDate = null;
+          state.viewYear = new Date().getFullYear();
+          state.viewMonth = new Date().getMonth();
+          renderCalendar();
+
+          const syncPill = document.getElementById('sheet-sync-pill');
+          if (syncPill) syncPill.classList.remove('is-synced');
+
+          const pill = document.getElementById('selected-date-pill');
+          if (pill) pill.innerHTML = '<span>✨ Tap any upcoming date above</span>';
+
+          const confirmBtn = document.getElementById('btn-confirm-date');
+          if (confirmBtn) confirmBtn.classList.add('is-locked');
+
+          const entryStatus = document.getElementById('entry-status-note');
+          if (entryStatus) {
+            entryStatus.textContent = '';
+            entryStatus.classList.remove('is-shown');
+          }
+
+          const counterEl = document.getElementById('chase-counter-pill');
+          if (counterEl) counterEl.innerHTML = '<span>Chase Attempts: 0 / 5</span>';
+
+          const modalSub = document.getElementById('nahiii-modal-sub');
+          if (modalSub) {
+            modalSub.textContent = 'Ek last chance — invite open karo ya phir Nahiii ko pakad ke dikhao 😉';
+          }
+
+          const modal = document.getElementById('nahiii-modal');
+          if (modal) modal.classList.remove('is-open');
+
+          setTheme('entry');
+          pickRandomEscapeMode(state.escapeMode.id);
+          goToStage(0);
+          runPreloaderSequence();
+        });
+      }
+
+      /* =======================================================================
+         12. BOOTSTRAP (DOMContentLoaded for UI + window.onload for Three.js)
+         ======================================================================= */
+      let uiBooted = false;
+
+      function bootUI() {
+        if (uiBooted) return;
+        uiBooted = true;
+        initBokehOrbs();
+        pickRandomEscapeMode();
+        initRunawayButtons();
+        renderCalendar();
+        attach3DTilt(document.getElementById('calendar-3d-card'));
+        attach3DTilt(document.getElementById('chai-ticket-3d'));
+        initPointerEffects();
+        initFlowListeners();
+        startGentleAmbientEmojis();
+        runPreloaderSequence();
+      }
+
+      function bootThreeOnLoad() {
+        bootUI();
+        if (!state.animationStarted) {
+          state.animationStarted = true;
+          initThreeScene();
+          if (state.threeReady) {
+            animateThree();
+          }
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bootUI);
+      } else {
+        bootUI();
+      }
+
+      window.onload = bootThreeOnLoad;
+      if (document.readyState === 'complete') {
+        bootThreeOnLoad();
+      }
+    })();
+  </script>
+</body>
+</html>
